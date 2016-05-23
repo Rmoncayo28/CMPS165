@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+svg {
+  font: 10px sans-serif;
+}
+
+.caption {
+  font-weight: bold;
+}
+
+.key path {
+  display: none;
+}
+
+.key line {
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.county-border {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .3;
+}
+
+</style>
+<body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/topojson.v1.min.js"></script>
+<script>
+
+//incrementColor function obtained from http://stackoverflow.com/questions/12934720/how-to-increment-decrement-hex-color-values-with-javascript-jquery/15776973#15776973   
+var incrementColor = function(color, step){
+    var colorToInt = parseInt(color.substr(1), 16),                     // Convert HEX color to integer
+        nstep = parseInt(step);                                         // Convert step to integer
+    if(!isNaN(colorToInt) && !isNaN(nstep)){                            // Make sure that color has been converted to integer
+        colorToInt += nstep;                                            // Increment integer with step
+        var ncolor = colorToInt.toString(16);                           // Convert back integer to HEX
+        ncolor = '#' + (new Array(7-ncolor.length).join(0)) + ncolor;   // Left pad "0" to make HEX look like a color
+        if(/^#[0-9a-f]{6}$/i.test(ncolor)){                             // Make sure that HEX is a valid color
+            return ncolor;
+        }
+    }
+    return color;
+};
+var width = 960,
+    height = 1100;
+
+var formatNumber = d3.format(",d");
+
+var path = d3.geo.path()
+    .projection(null);
+
+var color = d3.scale.threshold()
+    .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
+    .range(["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]);
+
+// A position encoding for the key only.
+var x = d3.scale.linear()
+    .domain([0, 5100])
+    .range([0, 480]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickSize(13)
+    .tickValues(color.domain())
+    .tickFormat(function(d) { return d >= 100 ? formatNumber(d) : null; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(440,40)");
+/*
+//Scale bars
+g.selectAll("rect")
+    .data(color.range().map(function(d, i) {
+      return {
+        x0: i ? x(color.domain()[i - 1]) : x.range()[0],
+        x1: i < color.domain().length ? x(color.domain()[i]) : x.range()[1],
+        z: d
+      };
+    }))
+  .enter().append("rect")
+    .attr("height", 8)
+    .attr("x", function(d) { return d.x0; })
+    .attr("width", function(d) { return d.x1 - d.x0; })
+    .style("fill", function(d) { return d.z; });
+
+g.call(xAxis).append("text")
+    .attr("class", "caption")
+    .attr("y", -6)
+    .text("Population per square mile");*/
+
+var startColor = "#000000";
+
+d3.json("ca.json", function(error, ca) {
+  if (error) throw error;
+
+  var tracts = topojson.feature(ca, ca.objects.tracts);
+
+  // Clip tracts to land.
+ /* svg.append("defs").append("clipPath")
+      .attr("id", "clip-land")
+    .append("path")
+      .datum(topojson.feature(ca, ca.objects.counties))
+      .attr("d", path);*/
+  // Group tracts by color for faster rendering.
+    var numTracts = 0;
+  svg.append("g")
+      .attr("class", "tract")
+      .attr("clip-path", "url(#clip-land)")
+    .selectAll("path")
+      .data(d3.nest()
+        .key(function(d) { 
+          numTracts++;
+          startColor = incrementColor(startColor, 2090);
+          return startColor; })
+        .entries(tracts.features.filter(function(d) { return d.properties.area; })))
+    .enter().append("path")
+      .style("fill", function(d) { return d.key; })
+      .attr("d", function(d) { return path({type: "FeatureCollection", features: d.values}); });
+
+  // Draw county borders.
+  svg.append("path")
+      .datum(topojson.mesh(ca, ca.objects.counties, function(a, b) { return a !== b; }))
+      .attr("class", "county-border")
+     .attr("d", path);
+console.log(numTracts);
+});
+
+d3.select(self.frameElement).style("height", height + "px");
+</script>
