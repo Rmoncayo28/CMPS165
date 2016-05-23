@@ -24,6 +24,10 @@ svg {
   stroke: #000;
   stroke-opacity: .3;
 }
+    .county:hover {
+        fill: orange;
+    }
+
 
 </style>
 <body>
@@ -103,6 +107,7 @@ d3.json("ca.json", function(error, ca) {
   if (error) throw error;
 
   var tracts = topojson.feature(ca, ca.objects.tracts);
+  var counties = topojson.feature(ca, ca.objects.counties);
 
   // Clip tracts to land.
  /* svg.append("defs").append("clipPath")
@@ -112,6 +117,7 @@ d3.json("ca.json", function(error, ca) {
       .attr("d", path);*/
   // Group tracts by color for faster rendering.
     var numTracts = 0;
+    var countyNumber = 0;
   svg.append("g")
       .attr("class", "tract")
       .attr("clip-path", "url(#clip-land)")
@@ -126,11 +132,42 @@ d3.json("ca.json", function(error, ca) {
       .style("fill", function(d) { return d.key; })
       .attr("d", function(d) { return path({type: "FeatureCollection", features: d.values}); });
 
-  // Draw county borders.
+      svg.append("g")
+      .attr("class", "county")
+    .selectAll("path")
+      .data(d3.nest()
+        .key(function(d) { 
+          countyNumber++;
+          return countyNumber; })
+        .entries(tracts.features.filter(function(d) { return d.properties.area; })))
+    .enter().append("path")
+      .style("fill", function(d) { return "rgba(0, 0, 0, 0)"; })
+      .attr("d", function(d) { return path({type: "FeatureCollection", features: d.values}); })
+      .on("mouseover", function() {
+            d3.select(this)
+                .style("fill", "orange");
+        })
+        .on("mouseout", function(d) {
+            d3.select(this)
+
+                .style("fill", "rgba(0, 0, 0, 0)");
+        });
+    
+  /*// Draw county borders.
   svg.append("path")
       .datum(topojson.mesh(ca, ca.objects.counties, function(a, b) { return a !== b; }))
       .attr("class", "county-border")
-     .attr("d", path);
+     .attr("d", path)
+        .on("mouseover", function() {
+            d3.select(this)
+                .attr("fill", "orange");
+        })
+        .on("mouseout", function(d) {
+            d3.select(this)
+                .transition()
+                .duration(250)
+                .attr("fill", "rgba(0, 0, 0, 0)");
+        });*/
 console.log(numTracts);
 });
 
