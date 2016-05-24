@@ -21,9 +21,24 @@
         stroke-width: .5px;
         stroke-opacity: 0.25;
     }
+    
+    .caption {
+      font-weight: bold;
+    }
+
+    .key path {
+      display: none;
+    }
+
+    .key line {
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
 
 </style>
 <body>
+    <h1>California’s Counties’ Human Development Index</h1>
+    <div><button>Interaction Button 1</button><button>Interaction Button 2</button><button>Interaction Button 3</button></div>
     <div id="map"></div>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d3js.org/topojson.v1.min.js"></script>
@@ -52,11 +67,56 @@ var width = 960,
 			.translate([width/2, height/2]);
 
 var path = d3.geo.path().projection(projection);
+
+//Possible Legend
+var color = d3.scale.threshold()
+    .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
+    .range(["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]);
+    
+var formatNumber = d3.format(",d");
+
+// A position encoding for the key only.
+var x = d3.scale.linear()
+    .domain([0, 5100])
+    .range([0, 480]);
+
+//Creating the variables for the legend
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickSize(13)
+    .tickValues(color.domain())
+    .tickFormat(function(d) { return d >= 100 ? formatNumber(d) : null; });
+
     
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height);
 
+//Actually Creating the legend
+var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(540,40)");
+
+g.selectAll("rect")
+    .data(color.range().map(function(d, i) {
+      return {
+        x0: i ? x(color.domain()[i - 1]) : x.range()[0],
+        x1: i < color.domain().length ? x(color.domain()[i]) : x.range()[1],
+        z: d
+      };
+    }))
+  .enter().append("rect")
+    .attr("height", 8)
+    .attr("x", function(d) { return d.x0; })
+    .attr("width", function(d) { return d.x1 - d.x0; })
+    .style("fill", function(d) { return d.z; });
+
+g.call(xAxis).append("text")
+    .attr("class", "caption")
+    .attr("y", -6)
+    .text("Legend");
+    
 var tractColors = "#000000";
 var numTracts = 0;
 
