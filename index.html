@@ -1,203 +1,100 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+<html>
+    <head>
+        <Title> California's Quality of Life</Title>
+    <meta charset="UTF-8">
+    <style>
 
-    .county {
-      fill: #ccc;
-      fill-opacity: 0.1;
-      opacity: 1;
-      stroke: #000;
-      stroke-width: 1px;
-    }
-
-    .county:hover {
-      fill: red;
-      fill-opacity: 0.5;
-      stroke-width: 3px;
-    }
-    .tract {
-        fill: #ffd;
-        stroke: #000;
-        opacity: 1;
-        stroke-width: .5px;
-        stroke-opacity: 0.4;
-        
-    }
-    
-    .caption {
-      font-weight: bold;
-    }
-
-    .key path {
-      display: none;
-    }
-
-    .key line {
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-    div.tooltip {
-        position: absolute;
-        text-align: center;
-        width: 75px;
-        padding: 2px;
-        font: 12px sans-serif;
-        color: white;
-        background: black;
-        border: 0px;
-        border-radius: 8px;
-        pointer-events: none;
-}
-
-</style>
-<body>
-    <h1>California’s Counties’ Human Development Index</h1>
-    <div><button>Interaction Button 1</button><button>Interaction Button 2</button><button>Interaction Button 3</button></div>
-    <div id="map"></div>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/colorbrewer.v1.min.js"></script>
-<script src="https://d3js.org/topojson.v1.min.js"></script>
-<!-- Source https://github.com/emeeks/d3-svg-legend -->
-<script src="legend.min.js"></script>
-<script>
-
-//incrementColor function obtained from http://stackoverflow.com/questions/12934720/how-to-increment-decrement-hex-color-values-with-javascript-jquery/15776973#15776973   
-var incrementColor = function(color, step){
-    var colorToInt = parseInt(color.substr(1), 16),                     // Convert HEX color to integer
-        nstep = parseInt(step);                                         // Convert step to integer
-    if(!isNaN(colorToInt) && !isNaN(nstep)){                            // Make sure that color has been converted to integer
-        colorToInt += nstep;                                            // Increment integer with step
-        var ncolor = colorToInt.toString(16);                           // Convert back integer to HEX
-        ncolor = '#' + (new Array(7-ncolor.length).join(0)) + ncolor;   // Left pad "0" to make HEX look like a color
-        if(/^#[0-9a-f]{6}$/i.test(ncolor)){                             // Make sure that HEX is a valid color
-            return ncolor;
+        .county {
+          fill: #ccc;
+          fill-opacity: 0.1;
+          opacity: 1;
+          stroke: #000;
+          stroke-width: 1px;
         }
+
+        .county:hover {
+          fill: red;
+          fill-opacity: 0.5;
+          stroke-width: 3px;
+        }
+        .tract {
+            fill: #ffd;
+            stroke: #000;
+            opacity: 1;
+            stroke-width: .5px;
+            stroke-opacity: 0.4;
+
+        }
+
+        .caption {
+          font-weight: bold;
+        }
+
+        .key path {
+          display: none;
+        }
+
+        .key line {
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+        div.tooltip {
+            position: absolute;
+            text-align: center;
+            width: 75px;
+            padding: 2px;
+            font: 12px sans-serif;
+            color: white;
+            background: black;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
     }
-    return color;
-};
-var width = 1500,
-    height = 800;
 
-    
-	var  projection = d3.geo.mercator()
-			.scale(1000 * 3)
-			.center([-120, 36])
-			.translate([240, height/2 + 10]);
+    </style>
+        </head>
+    <body>
+        <h1><center>California’s Quality of Life</center></h1>
+        <div><button>Interaction Button 1</button><button>Interaction Button 2</button><button>Interaction Button 3</button></div>
+        <div id="map"></div>
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/colorbrewer.v1.min.js"></script>
+        <script src="https://d3js.org/topojson.v1.min.js"></script>
+        <!-- Source https://github.com/emeeks/d3-svg-legend -->
+        <script src="legend.min.js"></script>
+        <script src="main.js"></script>
+                <h1><center><strong>California's Quality of Life</strong></center></h1>
+        
+        <!--insert map script here..-->
+       
+		<p1><em> <center>Created by Raul Moncayo, Jeffrey Guo, Timothy Ma, Richard Pham</center></em></p1>
+        
+        <div><center></center></div>
+       
+        <ul>CMPS 165: Data Programming for Visualization</ul>   
+        <ul>In collaboration with:
+            <ol>Professor: Suresh Lodha</ol>
+            <ol>Teacher Assistance: Karthik</ol>
+        </ul>
+        <ul>UCSC: Spring 2016</ul>
+        <ul>Files Included:
+            <ol></ol>
 
-var path = d3.geo.path().projection(projection);
-
-    
-    
-var svg = d3.select("#map").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-    
-    
-//Possible Legend
-var color = d3.scale.threshold()
-    .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
-    .range(["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]);
-    //Land area of largest tract divided by 4
-    var largestDiv4 = 4525303421;
-    
-var tractScale = d3.scale.threshold()
-    .domain([largestDiv4 /8, largestDiv4 /2, largestDiv4* 2, largestDiv4 * 3, largestDiv4 * 4 + 1])
-    .range(colorbrewer.Reds[5]);
-var horizontalLegend = d3.svg.legend().cellWidth(130).units("land area ㎡").cellHeight(25).inputScale(tractScale).cellStepping(120);
-
-d3.select("svg").append("g")
-    .attr("transform", "translate(260,70)")
-    .attr("class", "legend")
-    .call(horizontalLegend);
-    
-var formatNumber = d3.format(",d");
-
-// A position encoding for the key only.
-var x = d3.scale.linear()
-    .domain([0, 5100])
-    .range([0, 480]);
-
-//Creating the variables for the legend
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .tickSize(13)
-    .tickValues(color.domain())
-    .tickFormat(function(d) { return d >= 100 ? formatNumber(d) : null; });
-
-    
-
-//Actually Creating the legend
-var g = svg.append("g")
-    .attr("class", "key")
-    .attr("transform", "translate(540,40)");
-
-/*g.selectAll("rect")
-    .data(color.range().map(function(d, i) {
-      return {
-        x0: i ? x(color.domain()[i - 1]) : x.range()[0],
-        x1: i < color.domain().length ? x(color.domain()[i]) : x.range()[1],
-        z: d
-      };
-    }))
-  .enter().append("rect")
-    .attr("height", 8)
-    .attr("x", function(d) { return d.x0; })
-    .attr("width", function(d) { return d.x1 - d.x0; })
-    .style("fill", function(d) { return d.z; });*/
-
-//g.call(xAxis).append("text")
-//    .attr("class", "caption")
-  //  .attr("y", -6)
-//    .text("Land area in ㎡ (square meter)");
-    
-var tractColors = "#000000";
-var numTracts = 0;
-
-d3.json("dataSets/caTractsAndCounties.json", function(error, ca) {
-  if (error) throw error;
-    
-    //Tracts
-    svg.append("g")
-        .selectAll("path")
-        .data(topojson.feature(ca, ca.objects.tracts).features)
-        .enter().append("path")
-        .attr("class", "tract")
-        .style("fill", function(d) {
-            numTracts++;
-            tractColors = incrementColor(tractColors, 2086.2);
-            return tractScale(d.properties.ALAND);
-        })
-        .attr("d", path);
-    
-    
-    //Counties
-    svg.append("g")
-        .selectAll("path")
-        .data(topojson.feature(ca, ca.objects.counties).features)
-        .enter().append("path")
-        .attr("class", "county")
-        .attr("d", path)
-        .on("mouseover", function(d) {
-                div.transition()
-                    .duration(200)
-                    .style("opacity", 0.9);
-                div.html(d.properties.NAME)
-                    .style("left", (d3.event.pageX) + 10 + "px")
-                    .style("top", (d3.event.pageY - 30) + "px");
-            })
-        .on("mouseout", function(d) {
-            div.transition()
-                .duration(500)
-                .style("opacity", 0.0)
-        });
-
-//tooltop declaration
-		var div = d3.select("#map").append("div")
-			.attr("class", "tooltip")
-			.style("opacity", 0);
-
-});
-
-d3.select(self.frameElement).style("height", height + "px");
-</script>
+        </ul>
+        
+        <ul>Data Sources
+            <ol>Github: <a href = "https://github.com/Rmoncayo28/CMPS165/tree/gh-pages/Data%20Sets">Data Sets</a></ol>
+        </ul>
+        
+        <ul>Visualization Sources:  
+            <ol><a href= "https://bl.ocks.org/mbostock/5562380"> California Population Density by Mike Bostock</a></ol>
+        </ul>
+        
+        <ul>Members:
+            <ol>Raul Moncayo</ol>
+            <ol>Jeffrey Guo</ol>
+            <ol>Timothy Ma</ol>
+            <ol>Richard Pham</ol>
+    </body>
+</html>
