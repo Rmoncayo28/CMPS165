@@ -15,7 +15,6 @@ var incrementColor = function (color, step) {
 var width = 1900
     , height = 1000;
 
-
 var projection = d3.geo.mercator()
     .scale(width * 2)
     .center([-120, 36])
@@ -27,17 +26,14 @@ var zoom = d3.behavior.zoom()
 
 var path = d3.geo.path().projection(projection);
 
-
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g");
 
+svg.call(zoom);
+
 var g = svg.append("g");
-
-svg.call(zoom)
-    .call(zoom.event);
-
 
 //Possible Legend
 var color = d3.scale.threshold()
@@ -56,7 +52,6 @@ d3.select("svg").append("g")
     .attr("class", "legend")
     .call(horizontalLegend);
 
-
 var formatNumber = d3.format(",d");
 
 // A position encoding for the key only.
@@ -74,39 +69,12 @@ var xAxis = d3.svg.axis()
         return d >= 100 ? formatNumber(d) : null;
     });
 
-
-
-//Actually Creating the legend
-//   var g = svg.append("g")
-//     .attr("class", "key")
-//   .attr("transform", "translate(540,40)");
-/*g.selectAll("rect")
-    .data(color.range().map(function(d, i) {
-      return {
-        x0: i ? x(color.domain()[i - 1]) : x.range()[0],
-        x1: i < color.domain().length ? x(color.domain()[i]) : x.range()[1],
-        z: d
-      };
-    }))
-  .enter().append("rect")
-    .attr("height", 8)
-    .attr("x", function(d) { return d.x0; })
-    .attr("width", function(d) { return d.x1 - d.x0; })
-    .style("fill", function(d) { return d.z; });*/
-
-//g.call(xAxis).append("text")
-//    .attr("class", "caption")
-//  .attr("y", -6)
-//    .text("Land area in ? (square meter)");
-
 d3.json("dataSets/caEducationBound.json", function (error, ca) {
     if (error) throw error;
 
     var tracts = topojson.feature(ca, ca.objects.tracts);
 
     //Tracts
-
-
     var tract1 = g.selectAll(".tract1")
         .data(topojson.feature(ca, ca.objects.tracts).features)
         .enter()
@@ -147,17 +115,14 @@ d3.json("dataSets/caEducationBound.json", function (error, ca) {
     tract2Gs.append("path")
         .attr("class", "tract")
         .style("fill", function (d) {
-
             return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
         })
         .attr("d", path);
 
-
     d3.selectAll(".radio").on("change", function () {
         if (document.getElementById("single").checked) {
             tract2Gs
-                .on("mouseover", function (d) {
-                })
+                .on("mouseover", function (d) {})
                 /*
                    div.transition()
                         .style("opacity", 0.75);
@@ -166,10 +131,8 @@ d3.json("dataSets/caEducationBound.json", function (error, ca) {
                         .style("left", (d3.event.pageX) + 10 + "px")
                         .style("top", (d3.event.pageY - 30) + "px");
                 })*/
-                .on("mouseout", function (d) {
-                })
-                .on("mousemove", function (d) {
-                })
+                .on("mouseout", function (d) {})
+                .on("mousemove", function (d) {})
                 .transition()
                 .duration(850)
                 .style("opacity", 0);
@@ -222,6 +185,21 @@ function mouseout(d) {
 }
 
 function zoomed() {
-    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    // the "zoom" event populates d3.event with an object that has
+    // a "translate" property (a 2-element Array in the form [x, y])
+    // and a numeric "scale" property
+    var e = d3.event, // now, constrain the x and y components of the translation by the
+        // dimensions of the viewport
+        tx = Math.min(0, Math.max(e.translate[0], width - width * e.scale))
+        , ty = Math.min(0, Math.max(e.translate[1], height - height * e.scale));
+    // then, update the zoom behavior's internal translation, so that
+    // it knows how to properly manipulate it on the next movement
+    zoom.translate([tx, ty]);
+    // and finally, update the <g> element's transform attribute with the
+    // correct translation and scale (in reverse order)
+    g.attr("transform", [
+            "translate(" + [tx, ty] + ")", "scale(" + e.scale + ")"
+    ].join(" "));
 }
+
 d3.select(self.frameElement).style("height", height + "px");
