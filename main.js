@@ -14,22 +14,31 @@
             }
             return color;
         };
-        var width = 1500,
-            height = 800;
+        var width = 1900,
+            height = 1000;
 
 
             var  projection = d3.geo.mercator()
-                    .scale(1000 * 3)
+                    .scale(width * 2)
                     .center([-120, 36])
-                    .translate([240, height/2 + 10]);
+                    .translate([280, height/2 + 50]);
 
+            var zoom = d3.behavior.zoom()
+                .scaleExtent([1, 200])
+                .on("zoom", zoomed);
+        
         var path = d3.geo.path().projection(projection);
-
 
 
         var svg = d3.select("#map").append("svg")
             .attr("width", width)
-            .attr("height", height);
+            .attr("height", height)
+            .append("g");
+
+        var g = svg.append("g");
+
+        svg.call(zoom)
+            .call(zoom.event);
 
 
         //Possible Legend
@@ -37,17 +46,18 @@
             .domain([1, 10, 50, 100, 500, 1000, 2000, 5000])
             .range(["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"]);
             //Land area of largest tract divided by 4
-            var largestDiv4 = 4525303421;
 
+//10.68 is the mean of the set of % of population in college
         var tractScale = d3.scale.threshold()
-            .domain([largestDiv4 /8, largestDiv4 /2, largestDiv4* 2, largestDiv4 * 3, largestDiv4 * 4 + 1])
-            .range(colorbrewer.Reds[5]);
-        var horizontalLegend = d3.svg.legend().cellWidth(130).units("land area ㎡").cellHeight(25).inputScale(tractScale).cellStepping(120);
+            .domain([2.67, 5.34, 10.68, 44.66, 101])
+            .range(colorbrewer.Blues[5]);
+        var horizontalLegend = d3.svg.legend().cellWidth(130).units("% pop in col").cellHeight(25).inputScale(tractScale).cellStepping(120);
 
         d3.select("svg").append("g")
-            .attr("transform", "translate(260,70)")
+            .attr("transform", "translate(290,70)")
             .attr("class", "legend")
             .call(horizontalLegend);
+
 
         var formatNumber = d3.format(",d");
 
@@ -67,10 +77,9 @@
 
 
         //Actually Creating the legend
-        var g = svg.append("g")
-            .attr("class", "key")
-            .attr("transform", "translate(540,40)");
-
+     //   var g = svg.append("g")
+       //     .attr("class", "key")
+         //   .attr("transform", "translate(540,40)");
         /*g.selectAll("rect")
             .data(color.range().map(function(d, i) {
               return {
@@ -90,50 +99,61 @@
           //  .attr("y", -6)
         //    .text("Land area in ? (square meter)");
 
-        var tractColors = "#000000";
-        var numTracts = 0;
-
-        d3.json("dataSets/caTractsAndCounties.json", function(error, ca) {
+        d3.json("dataSets/caEducationBound.json", function(error, ca) {
           if (error) throw error;
+            
+            var tracts = topojson.feature(ca, ca.objects.tracts);
 
             //Tracts
-            svg.append("g")
-                .selectAll("path")
+            
+            
+                g.selectAll("path")
                 .data(topojson.feature(ca, ca.objects.tracts).features)
                 .enter().append("path")
                 .attr("class", "tract")
                 .style("fill", function(d) {
-                    numTracts++;
-                    tractColors = incrementColor(tractColors, 2086.2);
-                    return tractScale(d.properties.ALAND);
+
+                    return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
                 })
-                .attr("d", path);
-
-
-            //Counties
-            svg.append("g")
-                .selectAll("path")
-                .data(topojson.feature(ca, ca.objects.counties).features)
-                .enter().append("path")
-                .attr("class", "county")
                 .attr("d", path)
-                .on("mouseover", function(d) {
-                        div.transition()
-                            .style("opacity", 0.9);
-                        div.html(d.properties.NAME)
+                .on("mouseover",  function(d) {
+                    mouseover(d);})
+                    /*
+                       div.transition()
+                            .style("opacity", 0.75);
+                        div.html("tract name = " + d.properties.NAME + "<br>" + "Total Population 18+ = " + d.properties.totPop18p + "<br>" +"Total population 18+ in college =" + d.properties.numInCol +
+                                 "<br>" + "% of population 18+ in college =" + d.properties.inColCent)
                             .style("left", (d3.event.pageX) + 10 + "px")
                             .style("top", (d3.event.pageY - 30) + "px");
-                    })
+                    })*/
                 .on("mouseout", function(d) {
-                    div.transition()
-                        .style("opacity", 0.0)
-                });
+                    mouseout(d);
+                })
+                .on("mousemove", function(d) {
+                    mousemove(d);
+                }); 
 
-        //tooltop declaration
-                var div = d3.select("#map").append("div")
-                    .attr("class", "tooltip")
-                    .style("opacity", 0);
+
+
 
         });
-
+        //tooltop declaration
+                var div = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("display", "none");
+function mouseover(d) {
+  div.style("display", "inline");
+}
+function mousemove(d) {
+  div
+      .html("tract name = "  + d.properties.NAME +"<br>"  + "Total Population 18+ = " + d.properties.totPop18p +"<br>"  +"Total population 18+ in college =" + d.properties.numInCol +"<br>" + "% of population 18+ in college =" + d.properties.inColCent)
+      .style("left", (d3.event.pageX - 34) + "px")
+      .style("top", (d3.event.pageY - 12) + "px");
+}
+function mouseout(d) {
+  div.style("display", "none");
+}
+function zoomed() {
+  g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
         d3.select(self.frameElement).style("height", height + "px");
