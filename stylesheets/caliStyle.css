@@ -1,0 +1,39 @@
+        .tract {
+            fill: #ffd;
+            stroke: #000;
+            opacity: 1;
+            stroke-width: 0.05px;
+            stroke-opacity: 0.4;
+
+        }
+        .tract:hover {
+            fill:green;
+            fill-opacity: 0.5;
+            stroke-width: 0.075px;
+        }
+        
+        .caption {
+            font-weight: bold;
+        }
+        
+        .key path {
+            display: none;
+        }
+        
+        .key line {
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+        
+        .tooltip {
+          position: absolute;
+          text-align: left;
+          width: 140px;
+          height: 60px;
+          padding: 8px;
+          margin-top: -20px;
+          font: 10px sans-serif;
+          background: #ddd;
+          pointer-events: none;
+          opacity: 0.7;
+        }
