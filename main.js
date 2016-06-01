@@ -180,7 +180,7 @@ function mousemove(d) {
         .style("left", (d3.event.pageX - 34) + "px")
         .style("top", (d3.event.pageY - 12) + "px");
     */
-        div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>% Insured: " + d.properties.percent_insured + "<br>% Uninsured: " + d.properties.percent_uninsured).style("left", (d3.event.pageX - 34) + "px")
+        div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % of 18+ in College: " + d.properties.inColCent + "<br>% Insured: " + d.properties.percent_insured + "<br>% Uninsured: " + d.properties.percent_uninsured).style("left", (d3.event.pageX - 34) + "px")
         .style("top", (d3.event.pageY - 12) + "px");
 }
 
