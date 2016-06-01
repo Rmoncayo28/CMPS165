@@ -69,7 +69,7 @@ var xAxis = d3.svg.axis()
         return d >= 100 ? formatNumber(d) : null;
     });
 var selected = {};
-d3.json("dataSets/caEducationBound.json", function (error, ca) {
+d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
     if (error) throw error;
 
     var tracts = topojson.feature(ca, ca.objects.tracts);
@@ -177,9 +177,7 @@ function mouseover(d) {
 }
 
 function mousemove(d) {
-    div
-        .html("tract name = " + d.properties.NAME + "<br>" + "Total Population 18+ = " + d.properties.totPop18p + "<br>" + "Total population 18+ in college =" + d.properties.numInCol + "<br>" + "% of population 18+ in college =" + d.properties.inColCent)
-        .style("left", (d3.event.pageX - 34) + "px")
+    div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % of 18+ in College: " + d.properties.inColCent + "<br>% Insured: " + d.properties.percent_insured + "<br>% Uninsured: " + d.properties.percent_uninsured).style("left", (d3.event.pageX - 34) + "px")
         .style("top", (d3.event.pageY - 12) + "px");
 }
 
