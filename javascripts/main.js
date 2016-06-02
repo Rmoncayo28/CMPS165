@@ -23,33 +23,29 @@ var g = svg.append("g");
 
 //10.68 is the mean of the set of % of population in college
 var tractScale = d3.scale.threshold()
-    .domain([2.67, 5.34, 10.68, 44.66, 101])
+    .domain([2.67, 5.34, 10.68, 44.66, 100])
     .range(colorbrewer.Blues[5]);
-var horizontalLegend = d3.svg.legend().cellWidth(130).units("% pop in col").cellHeight(25).inputScale(tractScale).cellStepping(120);
-
-d3.select("svg").append("g")
-    .attr("transform", "translate(290,70)")
-    .attr("class", "legend")
-    .call(horizontalLegend);
-
 
 var selected = {};
-var drawnOnce = false;
-var tract2Visible = false;
+
 d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
     if (error) throw error;
 
     var tracts = topojson.feature(ca, ca.objects.tracts);
 
     //Tracts
-    var tract1 = g.selectAll(".tract1")
+    
+    //Tract 1
+    var tract1 = g.append("g")
+        .attr("transform", "translate(450,-30)");
+
+    //Tract 1 Paths
+    var tract1paths = tract1.selectAll(".tract1")
         .data(topojson.feature(ca, ca.objects.tracts).features)
-        .enter()
-        .append("g").attr("class", "tract1")
+        .enter().append("g").attr("class", "tract1")
         .append("path")
         .attr("class", "tract")
         .style("fill", function (d) {
-
             return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
         })
         .attr("d", path)
@@ -63,80 +59,176 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
             mousemove(d);
         })
         .on("click", function (d) {
-            if(selected[d.properties.NAME] === undefined) {
+            if (selected[d.properties.NAME] === undefined) {
                 selected[d.properties.NAME] = this;
                 d3.select(this).style("fill", "red");
             } else {
-                d3.select(this).style("fill", function(d) {
-                   return tractScale(parseFloat(d.properties.inColCent, 10) || 0); 
+                d3.select(this).style("fill", function (d) {
+                    return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
                 });
                 selected[d.properties.NAME] = undefined;
             }
         });
 
+    //Tract 1 Legend
+    
+    //Tract 1 Legend x,y relative to tract1
+    var legend1x = 350;
+    var legend1y = 330;
+    
+    var legend1 = tract1.selectAll(".legend1")
+        .data(tractScale.domain(), function (d) {
+            return d;
+        })
+        .enter().append("g")
+        .attr("class", "legend1")
+        .attr("transform", function (d, i) {
+            return "translate(" + i * 50 + ", 0 )";
+        });
 
+    //Tract 1 Legend Color
+    legend1.append("rect")
+        .attr("x", legend1x)
+        .attr("y", legend1y)
+        .attr("width", 50)
+        .attr("height", 15)
+        .style("fill", function (d, i) {
+            return colorbrewer.Blues[5][i];
+        });
+
+    //Tract 1 Legend Text
+    legend1.append("text")
+        .attr("x", legend1x + 13)
+        .attr("y", legend1y + 25)
+        .attr("dy", ".35em")
+        .text(function (d) {
+            return d3.round(d) + "%";
+        });
+
+    //Tract 1 Legend Caption
+    tract1.append("text")
+        .attr("class", "legend1-caption")
+        .attr("x", legend1x + 5)
+        .attr("y", legend1y - 6)
+        .attr("font-size", "12px")
+        .text("% of population age 18 and over enrolled in college");
+    
+    //Tract 2
+    var tract2 = g.append("g")
+        .attr("transform", "translate(650,-30)")
+        .attr("visibility", "hidden");
+
+    //Tract 2 Paths
+    var tract2paths = tract2.selectAll(".tract2")
+        .data(topojson.feature(ca, ca.objects.tracts).features)
+        .enter().append("g").attr("class", "tract2")
+        .append("path")
+        .attr("class", "tract")
+        .style("fill", function (d) {
+            return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
+        })
+        .attr("d", path)
+        .on("mouseover", function (d) {
+            mouseover(d);
+        })
+        .on("mouseout", function (d) {
+            mouseout(d);
+        })
+        .on("mousemove", function (d) {
+            mousemove(d);
+        })
+        .on("click", function (d) {
+            if (selected[d.properties.NAME] === undefined) {
+                selected[d.properties.NAME] = this;
+                d3.select(this).style("fill", "red");
+            } else {
+                d3.select(this).style("fill", function (d) {
+                    return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
+                });
+                selected[d.properties.NAME] = undefined;
+            }
+        });
+
+    //Tract 2 Legend
+    
+    //Tract 2 Legend x,y relative to tract1
+    var legend2x = 350;
+    var legend2y = 330;
+    
+    var legend2 = tract2.selectAll(".legend2")
+        .data(tractScale.domain(), function (d) {
+            return d;
+        })
+        .enter().append("g")
+        .attr("class", "legend2")
+        .attr("transform", function (d, i) {
+            return "translate(" + i * 50 + ", 0 )";
+        });
+
+    //Tract 2 Legend Color
+    legend2.append("rect")
+        .attr("x", legend2x)
+        .attr("y", legend2y)
+        .attr("width", 50)
+        .attr("height", 15)
+        .style("fill", function (d, i) {
+            return colorbrewer.Blues[5][i];
+        });
+
+    //Tract 2 Legend Text
+    legend2.append("text")
+        .attr("x", legend2x + 13)
+        .attr("y", legend2y + 25)
+        .attr("dy", ".35em")
+        .text(function (d) {
+            return d3.round(d) + "%";
+        });
+
+    //Tract 2 Legend Caption
+    tract2.append("text")
+        .attr("class", "legend1-caption")
+        .attr("x", legend2x + 5)
+        .attr("y", legend2y - 6)
+        .attr("font-size", "12px")
+        .text("% of population age 18 and over enrolled in college");
     
     // Drop Down Menu!
-    d3.select("#dropdown").on("change", function() {
+    d3.select("#dropdown").on("change", function () {
         var type = d3.select(this).property('value');
-        if ( type == "education" ) {
-            
-        } else if ( type == "health" ) {
-            
-        } else if ( type == "poverty" ) {
-            
+        if (type == "education") {
+
+        } else if (type == "health") {
+
+        } else if (type == "poverty") {
+
         }
     });
 
+    //Layer Selection
     d3.selectAll(".radio").on("change", function () {
         if (document.getElementById("single").checked) {
-            tract2Visible = false;
-            g.selectAll(".tract2")
-                .on("mouseover", function (d) {})
-                /*
-                   div.transition()
-                        .style("opacity", 0.75);
-                    div.html("tract name = " + d.properties.NAME + "<br>" + "Total Population 18+ = " + d.properties.totPop18p + "<br>" +"Total population 18+ in college =" + d.properties.numInCol +
-                             "<br>" + "% of population 18+ in college =" + d.properties.inColCent)
-                        .style("left", (d3.event.pageX) + 10 + "px")
-                        .style("top", (d3.event.pageY - 30) + "px");
-                })*/
-                .on("mouseout", function (d) {})
-                .on("mousemove", function (d) {})
-                .style("opacity", 0)
-                .attr("transform", "translate(0, " + -height +")");
+            d3.select("#dropdown").style("opacity", 1);
+            
+            tract1.transition()
+                .duration(750)
+                .attr("transform", "translate(450,-30)");
+            
+            tract2.transition()
+                .duration(750)
+                .attr("visibility", "hidden")
+                .attr("transform", "translate(650,-30)");
+            
         } else if (document.getElementById("side-by-side").checked) {
-                tract2Visible = true;
-                if (!drawnOnce) {
-                    drawnOnce = true;
-                    var tract2 = g.selectAll(".tract2")
-                    .data(topojson.feature(ca, ca.objects.tracts).features);
-
-                    var tract2Gs = tract2.enter()
-                        .append("g")
-                        .attr("class", "tract2")
-                        .attr("transform", "translate(500,0)")
-                        .style("opacity", 0);
-
-                    tract2Gs.append("path")
-                        .attr("class", "tract")
-                        .style("fill", function (d) {
-                            return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
-                        })
-                        .attr("d", path);
-                }
-                    g.selectAll(".tract2")
-                    .on("mouseover", function (d) {
-                            mouseover(d);
-                        })
-                    .on("mouseout", function (d) {
-                        mouseout(d);
-                    })
-                    .on("mousemove", function (d) {
-                        mousemove(d);
-                    })
-                    .style("opacity", 1)
-                    .attr("transform", "translate(500, 0)");  
+            d3.select("#dropdown").style("opacity", 0);
+            
+            tract1.transition()
+                .duration(750)
+                .attr("transform", "translate(25,-30)");
+            
+            tract2.transition()
+                .duration(750)
+                .attr("visibility", "visible")
+                .attr("transform", "translate(650,-30)");
 
         }
     });
@@ -173,11 +265,10 @@ function zoomed() {
     // it knows how to properly manipulate it on the next movement
     zoom.translate([tx, ty]);
     // and finally, update the <g> element's transform attribute with the
-    // correct translation and scale (in reverse order)    
+    // correct translation and scale (in reverse order)
     g.attr("transform", [
             "translate(" + [tx, ty] + ")", "scale(" + e.scale + ")"
     ].join(" "));
-
 }
 
 d3.select(self.frameElement).style("height", height + "px");
