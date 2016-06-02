@@ -121,6 +121,18 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
             return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
         })
         .attr("d", path);
+    
+    // Drop Down Menu!
+    d3.select("#dropdown").on("change", function() {
+        var type = d3.select(this).property('value');
+        if ( type == "education" ) {
+            
+        } else if ( type == "health" ) {
+            
+        } else if ( type == "poverty" ) {
+            
+        }
+    });
 
     d3.selectAll(".radio").on("change", function () {
         if (document.getElementById("single").checked) {
