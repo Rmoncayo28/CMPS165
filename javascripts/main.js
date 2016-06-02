@@ -43,6 +43,9 @@ var povertyScale = d3.scale.threshold()
 
 var selected = {};
 
+//set datatype equal to the default value of the dropdown menu
+var dataType = "education"; 
+
 d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
     if (error) throw error;
 
@@ -235,12 +238,12 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
     
     // Drop Down Menu!
     d3.select("#dropdown").on("change", function () {
-        var type = d3.select(this).property('value');
-        if (type == "education") {
+        dataType = d3.select(this).property('value');
+        if (dataType == "education") {
             changeData(tract1paths, "education")
-        } else if (type == "health") {
+        } else if (dataType == "health") {
             changeData(tract1paths, "health");
-        } else if (type == "poverty") {
+        } else if (dataType == "poverty") {
             changeData(tract1paths, "poverty");
         }
             
@@ -303,8 +306,23 @@ function mouseover(d) {
 }
 
 function mousemove(d) {
-    div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % of 18+ in College: " + d.properties.inColCent + "<br>% Insured: " + d.properties.percent_insured + "<br>% Uninsured: " + d.properties.percent_uninsured).style("left", (d3.event.pageX - 34) + "px")
-        .style("top", (d3.event.pageY - 12) + "px");
+    switch(dataType) {
+        case "education":
+            div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % of 18+ in College: " + d.properties.inColCent).style("left", (d3.event.pageX - 180) + "px")
+            .style("top", (d3.event.pageY) + "px").style("height", "50px");
+            break;
+        case "health" : 
+            div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br>% Insured: " + d.properties.percent_insured + "<br>% Uninsured: " + d.properties.percent_uninsured).style("left", (d3.event.pageX - 180) + "px")
+            .style("top", (d3.event.pageY) + "px").style("height", "60px");
+            break;
+        case "poverty":
+            div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % living in poverty: N/A").style("left", (d3.event.pageX - 180) + "px")
+            .style("top", (d3.event.pageY) + "px").style("height", "50px");
+            break;
+        default:
+            console.log("Default: " + dataType);
+            break;
+    }
 }
 
 function mouseout(d) {
