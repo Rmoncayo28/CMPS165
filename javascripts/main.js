@@ -10,16 +10,25 @@ var zoom = d3.behavior.zoom()
     .on("zoom", zoomed);
 
 var path = d3.geo.path().projection(projection);
-
+var border=1;
+var borderColor = "black";
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .attr("border", border)
     .append("g");
 
 svg.call(zoom);
 
 var g = svg.append("g");
-
+var borderPath = svg.append("rect")
+       			.attr("x", 0)
+       			.attr("y", 0)
+       			.attr("height", height)
+       			.attr("width", width)
+       			.style("stroke", borderColor)
+       			.style("fill", "none")
+       			.style("stroke-width", border)
 //10.68 is the mean of the set of % of population in college
 var educationScale = d3.scale.threshold()
     .domain([2.67, 5.34, 10.68, 44.66, 100])
