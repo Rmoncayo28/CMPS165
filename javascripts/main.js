@@ -245,6 +245,22 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
         }
     });
 
+    //Checkboxes
+    d3.selectAll(".overlay_button").on("change", function() {
+        var type = this.id;
+        switch(type) {
+            case "education_box":
+				//Add functionality here
+				break;
+            case "health_box":
+				
+				break;
+            case "poverty_box":
+
+				break;
+        }
+    });
+    
     //Layer Selection
     d3.selectAll(".radio").on("change", function () {
         if (document.getElementById("single").checked) {
