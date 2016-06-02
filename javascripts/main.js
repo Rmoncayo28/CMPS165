@@ -77,11 +77,37 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
             if (selected[d.properties.NAME] === undefined) {
                 selected[d.properties.NAME] = this;
                 d3.select(this).style("fill", "red");
+                
+                
+                var x = document.getElementById("table1");
+                var newRow = document.createElement("TR");
+                newRow.setAttribute("id" , "row" + d.properties.NAME);
+                
+                var newData = document.createElement("TD");
+                newData.innerHTML = d.properties.NAME;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.county_name;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.population;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.inColCent;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.percent_insured;
+                newRow.appendChild(newData);
+                
+                
+                x.appendChild(newRow);
             } else {
                 d3.select(this).style("fill", function (d) {
                     return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
                 });
                 selected[d.properties.NAME] = undefined;
+                var removeme = document.getElementById("row" + d.properties.NAME);
+                removeme.parentElement.removeChild(removeme);
             }
         });
 
