@@ -9,17 +9,22 @@
 
 <body>
     <h1><center><strong>California's Quality of Life</strong></center></h1>
+    
     <h5><center>How does income correlate to one's ability to receive a college education and healthcare? Our visualisation shows that populations with high poverty levels are less likely to go college and receive adequate health coverage. In contrast, wealthy areas enjoy high college enrollment rates and adequate healthcare. </center></h5>
+    
     <form>
         <input type="radio" id="single" name="group-stack" class="radio" checked>Single Layer
         <input type="radio" id="side-by-side" name="group-stack" class="radio">Side by Side
     </form>
-    <div>
-        <button>Interaction Button 1</button>
-        <button>Interaction Button 2</button>
-        <button>Interaction Button 3</button>
-    </div>
+    
+    <select id="dropdown">
+        <option value="education">Education</option>
+        <option value="health">Health</option>
+        <option value="poverty">Poverty</option>
+    </select>
+    
     <div id="map"></div>
+    
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/colorbrewer.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
@@ -65,7 +70,7 @@
     <ul>Visualization Sources:
         <ol>
             <li><a href="https://bl.ocks.org/mbostock/4122298">U.S. Counties TopoJSON</a></li>
-            <li><a href= "https://bl.ocks.org/mbostock/5562380"> California Population Density by Mike Bostock</a>
+            <li><a href="https://bl.ocks.org/mbostock/5562380"> California Population Density by Mike Bostock</a>
             </li>
             <li><a href="https://github.com/emeeks/d3-svg-legend">d3-svg-legend</a></li>
             <li><a href="http://bl.ocks.org/mbostock/1087001">Absolute-Positioned Tooltip</a></li>
