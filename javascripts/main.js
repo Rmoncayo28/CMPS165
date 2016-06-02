@@ -1,5 +1,4 @@
-var width = 1900
-    , height = 1000;
+var width = 1900, height = 1000;
 
 var projection = d3.geo.mercator()
     .scale(width * 2)
@@ -22,9 +21,16 @@ svg.call(zoom);
 var g = svg.append("g");
 
 //10.68 is the mean of the set of % of population in college
-var tractScale = d3.scale.threshold()
+var educationScale = d3.scale.threshold()
     .domain([2.67, 5.34, 10.68, 44.66, 100])
     .range(colorbrewer.Blues[5]);
+//mean value for percent_insured = 666172.3999999982/8046 = 82.7954760129
+var healthScale = d3.scale.threshold()
+    .domain([20.69875, 41.3975, 82.795, 91.398, 101])
+    .range(colorbrewer.Greens[5]);
+var povertyScale = d3.scale.threshold()
+    .domain([20.69875, 41.3975, 82.795, 91.398, 101])
+    .range(colorbrewer.Purples[5]);
 
 var selected = {};
 
@@ -46,7 +52,7 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
         .append("path")
         .attr("class", "tract")
         .style("fill", function (d) {
-            return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
+            return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
         })
         .attr("d", path)
         .on("mouseover", function (d) {
@@ -64,7 +70,7 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
                 d3.select(this).style("fill", "red");
             } else {
                 d3.select(this).style("fill", function (d) {
-                    return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
+                    return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
                 });
                 selected[d.properties.NAME] = undefined;
             }
@@ -77,7 +83,7 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
     var legend1y = 330;
     
     var legend1 = tract1.selectAll(".legend1")
-        .data(tractScale.domain(), function (d) {
+        .data(educationScale.domain(), function (d) {
             return d;
         })
         .enter().append("g")
@@ -125,7 +131,7 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
         .append("path")
         .attr("class", "tract")
         .style("fill", function (d) {
-            return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
+            return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
         })
         .attr("d", path)
         .on("mouseover", function (d) {
@@ -143,7 +149,7 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
                 d3.select(this).style("fill", "red");
             } else {
                 d3.select(this).style("fill", function (d) {
-                    return tractScale(parseFloat(d.properties.inColCent, 10) || 0);
+                    return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
                 });
                 selected[d.properties.NAME] = undefined;
             }
@@ -156,7 +162,7 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
     var legend2y = 330;
     
     var legend2 = tract2.selectAll(".legend2")
-        .data(tractScale.domain(), function (d) {
+        .data(educationScale.domain(), function (d) {
             return d;
         })
         .enter().append("g")
@@ -196,11 +202,11 @@ d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
     d3.select("#dropdown").on("change", function () {
         var type = d3.select(this).property('value');
         if (type == "education") {
-
+            changeData(tract1paths, "education")
         } else if (type == "health") {
-
+            changeData(tract1paths, "health");
         } else if (type == "poverty") {
-
+            changeData(tract1paths, "poverty");
         }
     });
 
@@ -251,6 +257,59 @@ function mousemove(d) {
 
 function mouseout(d) {
     div.style("display", "none");
+}
+
+function changeData(group, type) {
+    if(type.toLowerCase() === "health") {
+        group.transition()
+            .style("fill", function(d) {
+                     return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
+            });
+        group.on("click", function (d) {
+                if (selected[d.properties.NAME] === undefined) {
+                    selected[d.properties.NAME] = this;
+                    d3.select(this).style("fill", "red");
+                } else {
+                    d3.select(this).style("fill", function (d) {
+                        return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
+                    });
+                    selected[d.properties.NAME] = undefined;
+                }
+            })
+    } else if(type.toLowerCase() === "poverty") {
+        group.transition()
+            .style("fill", function(d) {
+                     return povertyScale(parseFloat(d.properties.inColCent, 10) || 0);
+            });
+         group.on("click", function (d) {
+                if (selected[d.properties.NAME] === undefined) {
+                    selected[d.properties.NAME] = this;
+                    d3.select(this).style("fill", "red");
+                } else {
+                    d3.select(this).style("fill", function (d) {
+                        return povertyScale(parseFloat(d.properties.inColCent, 10) || 0);
+                    });
+                    selected[d.properties.NAME] = undefined;
+                }
+            })
+        
+    } else if(type.toLowerCase() === "education") {
+         group.transition()
+            .style("fill", function(d) {
+                     return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
+            });
+         group.on("click", function (d) {
+                if (selected[d.properties.NAME] === undefined) {
+                    selected[d.properties.NAME] = this;
+                    d3.select(this).style("fill", "red");
+                } else {
+                    d3.select(this).style("fill", function (d) {
+                        return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
+                    });
+                    selected[d.properties.NAME] = undefined;
+                }
+            })
+    }
 }
 
 function zoomed() {
