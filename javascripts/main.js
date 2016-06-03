@@ -46,7 +46,7 @@ var selected = {};
 //set datatype equal to the default value of the dropdown menu
 var dataType = "education"; 
 
-d3.json("dataSets/caEduHealthBound.json", function (error, ca) {
+d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     if (error) throw error;
 
     var tracts = topojson.feature(ca, ca.objects.tracts);
@@ -316,7 +316,7 @@ function mousemove(d) {
             .style("top", (d3.event.pageY) + "px").style("height", "60px");
             break;
         case "poverty":
-            div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % living in poverty: N/A").style("left", (d3.event.pageX - 180) + "px")
+            div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % living in poverty: " + d.properties.percent_poverty).style("left", (d3.event.pageX - 180) + "px")
             .style("top", (d3.event.pageY) + "px").style("height", "50px");
             break;
         default:
