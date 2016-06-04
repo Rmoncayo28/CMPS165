@@ -129,6 +129,10 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
                 removeme.parentElement.removeChild(removeme);
             }
         });
+    tract1.append("path")
+          .datum(topojson.mesh(ca, ca.objects.counties, function(a, b) { return a !== b; }))
+          .attr("class", "county-border")
+          .attr("d", path);
 
     //Tract 1 Legend
 
@@ -217,7 +221,10 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
                 selected[d.properties.NAME] = undefined;
             }
         });
-
+    tract2.append("path")
+          .datum(topojson.mesh(ca, ca.objects.counties, function(a, b) { return a !== b; }))
+          .attr("class", "county-border")
+          .attr("d", path);
     //Tract 2 Legend
 
     //Tract 2 Legend x,y relative to tract1
