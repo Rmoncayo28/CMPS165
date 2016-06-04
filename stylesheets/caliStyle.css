@@ -24,19 +24,21 @@
             stroke: #000;
             shape-rendering: crispEdges;
         }
-        
+
         .tooltip {
           position: absolute;
           text-align: left;
-          width: 140px;
-          height: 70px;
+          width: 195px;
+          height: 80px;
           padding: 8px;
           margin-top: -20px;
-          font: 10px sans-serif;
-          background: #ddd;
+          font: 12px sans-serif;
+          background: #0C374D;
+          color: #fff;
           pointer-events: none;
           opacity: 0.7;
         }
+
         table, th, td {
     border: 1px solid black;
     border-collapse: collapse;

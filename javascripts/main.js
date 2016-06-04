@@ -561,23 +561,8 @@ function mouseover(d) {
 }
 
 function mousemove(d) {
-    switch (dataType) {
-    case "education":
-        div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % of 18+ in College: " + d.properties.inColCent).style("left", (d3.event.pageX - 180) + "px")
-            .style("top", (d3.event.pageY) + "px").style("height", "50px");
-        break;
-    case "health":
-        div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br>% Insured: " + d.properties.percent_insured + "<br>% Uninsured: " + d.properties.percent_uninsured).style("left", (d3.event.pageX - 180) + "px")
-            .style("top", (d3.event.pageY) + "px").style("height", "60px");
-        break;
-    case "poverty":
-        div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % living in poverty: " + d.properties.percent_poverty).style("left", (d3.event.pageX - 180) + "px")
-            .style("top", (d3.event.pageY) + "px").style("height", "50px");
-        break;
-    default:
-        console.log("Default: " + dataType);
-        break;
-    }
+    div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % of 18+ in College: " + d.properties.inColCent + "<br>% Insured: " + d.properties.percent_insured + "<br> % living in poverty: " + d.properties.percent_poverty).style("left", (d3.event.pageX - 220) + "px")
+            .style("top", (d3.event.pageY) + "px").style("height", "80px");
 }
 
 function mouseout(d) {
