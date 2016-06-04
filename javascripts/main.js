@@ -707,6 +707,10 @@ function changeData(group, type) {
 }
 
 function zoomed() {
+    if(d3.event.translate[0] == 0 && d3.event.translate[0] == 0) {
+        window.scrollBy(0,80);
+    }
+    
     // the "zoom" event populates d3.event with an object that has
     // a "translate" property (a 2-element Array in the form [x, y])
     // and a numeric "scale" property
