@@ -1,6 +1,6 @@
 .wrapper {
-    position:absolute;
-	width: 195px;
+    position:fixed;
+    width: 195px;
     z-index: 1;
     top: 230px;
     left: 630px;
