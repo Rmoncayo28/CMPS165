@@ -5,6 +5,7 @@
     <Title> California's Quality of Life</Title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="stylesheets/caliStyle.css">
+    <link rel="stylesheet" href="stylesheets/spinner.css">
     <!-- load jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <!--buttonPresses Scripts!  -->
@@ -41,6 +42,10 @@
     <br>
     -->
 
+    <div id="wrapper"  class="wrapper">
+        <div class="cssload-loader"></div>
+    </div>
+
     <div id="map"></div>
 
     <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -53,11 +58,11 @@
     <script src="javascripts/main.min.js"></script>
 
     <center>
-        <div id="selector" >
+        <div id="selector">
             <section id="buttons" class="gradient">
                 <button id="button_education" type="button" value="false" onclick="activeEduButton();">Education</button>
                 <button id="button_health" type="button" value="false" onclick="activeHealthButton();">Health Insurance</button>
-                <button id="button_poverty" type="button" value="false" onclick="activePovertyButton();" >Poverty</button>
+                <button id="button_poverty" type="button" value="false" onclick="activePovertyButton();">Poverty</button>
             </section>
         </div>
     </center>
