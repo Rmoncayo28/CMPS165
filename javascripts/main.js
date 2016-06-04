@@ -433,6 +433,9 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
             break;
         }
     });
+    
+    
+    d3.select("#wrapper").remove();
 
     //Button Presses!
 
