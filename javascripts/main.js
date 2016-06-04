@@ -89,6 +89,11 @@ var map33Y = -30;
 //set datatype equal to the default value of the dropdown menu
 var dataType = "education";
 
+ var deleteRow = function (row) {
+     var table = row.parentNode; 
+     table.removeChild(row); 
+ }
+
 d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     if (error) throw error;
 
@@ -124,7 +129,6 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
                 selected[d.properties.NAME] = this;
                 d3.select(this).style("fill", "red");
 
-
                 var x = document.getElementById("table1");
                 var newRow = document.createElement("TR");
                 newRow.setAttribute("id", "row" + d.properties.NAME);
@@ -145,8 +149,16 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
                 newData.innerHTML = d.properties.percent_insured;
                 newRow.appendChild(newData);
 
-
                 x.appendChild(newRow);
+                var currObj = this
+                var dee = d;
+                newRow.addEventListener("click", function() {
+                    deleteRow(newRow);
+                    d3.select(currObj).style("fill", function (d) {
+                        return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
+                    });
+                    selected[dee.properties.NAME] = undefined;
+                });
             } else {
                 d3.select(this).style("fill", function (d) {
                     return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
@@ -253,8 +265,16 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
                 newData.innerHTML = d.properties.percent_insured;
                 newRow.appendChild(newData);
 
-
                 x.appendChild(newRow);
+                var currObj = this
+                var dee = d;
+                 newRow.addEventListener("click", function() {
+                    deleteRow(newRow);
+                     d3.select(currObj).style("fill", function (d) {
+                        return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
+                    });
+                     selected[dee.properties.NAME] = undefined;
+                 });
             } else {
                 d3.select(this).style("fill", function (d) {
                     return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
@@ -362,6 +382,19 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
 
 
                 x.appendChild(newRow);
+                var currObj = this
+                var dee = d;
+                newRow.addEventListener("click", function() {
+                    deleteRow(newRow);
+                    d3.select(currObj).style("fill", function (d) {
+                        return povertyScale(parseFloat(d.properties.percent_poverty, 10) || 0);
+                    });
+                    selected[dee.properties.NAME] = undefined;
+                });
+                newRow.addEventListener("mouseover", function() {
+                    console.log("over");
+                });
+                     
             } else {
                 d3.select(this).style("fill", function (d) {
                     return povertyScale(parseFloat(d.properties.percent_poverty, 10) || 0);
