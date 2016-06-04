@@ -5,38 +5,44 @@
     <Title> California's Quality of Life</Title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="stylesheets/caliStyle.css">
-</head>    
-    
+    <!-- load jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <!--buttonPresses Scripts!  -->
+    <script src="javascripts/buttonPresses.js"></script>
+</head>
+
 <body>
     <h1><center><strong>California's Quality of Life</strong></center></h1>
-    
+
     <h5><center>How does income correlate to one's ability to receive a college education and healthcare? Our visualisation shows that populations with high poverty levels are less likely to go college and receive adequate health coverage. In contrast, wealthy areas enjoy high college enrollment rates and adequate healthcare. </center></h5>
-    
+
+    <!--
     <form>
         <input type="radio" id="single" name="group-stack" class="radio" checked>Single Layer
         <input type="radio" id="side-by-side" name="group-stack" class="radio">Side by Side
         <input type="radio" id="overlay" name="group-stack" class="radio">Overlay
-
     </form>
-    
+
     <br>
-    
+
     <select id="dropdown">
         <option value="education">Education</option>
         <option value="health">Health</option>
         <option value="poverty">Poverty</option>
     </select>
-    
-    <br><br>
+
+    <br>
+    <br>
     <div class="overlay_options">
         <input class="overlay_button" id="education_box" type="checkbox">Education Overlay</input>
         <input class="overlay_button" id="health_box" type="checkbox">Health Overlay</input>
         <input class="overlay_button" id="poverty_box" type="checkbox">Poverty Overlay</input>
     </div>
-
     <br>
+    -->
+
     <div id="map"></div>
-    
+
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/colorbrewer.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
@@ -46,24 +52,49 @@
     <!--insert map script here..-->
     <script src="javascripts/main.min.js"></script>
 
+    <center>
+        <div id="selector" >
+            <section id="buttons" class="gradient">
+                <button id="button_education" type="button" value="false" onclick="activeEduButton();">Education</button>
+                <button id="button_health" type="button" value="false" onclick="activeHealthButton();">Health Insurance</button>
+                <button id="button_poverty" type="button" value="false" onclick="activePovertyButton();" >Poverty</button>
+            </section>
+        </div>
+    </center>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+
     <table style="width:100%" id="table1">
         <caption>Census tract comparison</caption>
-      <tr>
-        <th>Tract Name</th>
-        <th>County</th>
-        <th>Population</th>
-        <th>% in College</th>
-        <th>% insured</th>
-      </tr>
+        <tr>
+            <th>Tract Name</th>
+            <th>County</th>
+            <th>Population</th>
+            <th>% in College</th>
+            <th>% insured</th>
+        </tr>
     </table>
-    
+
     <p1><em> <center>Created by Raul Moncayo, Jeffrey Guo, Timothy Ma, Richard Pham</center></em></p1>
 
     <div>
         <center></center>
     </div>
-    
-    <br><br><br><br><br><br><br><br><br><br>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 
     <ul>CMPS 165: Data Programming for Visualization</ul>
     <ul>In collaboration with:
@@ -101,6 +132,8 @@
             <li><a href="http://bl.ocks.org/mbostock/1087001">Absolute-Positioned Tooltip</a></li>
             <li><a href="https://bl.ocks.org/mbostock/8fadc5ac9c2a9e7c5ba2">Map Pan & Zoom I</a></li>
             <li><a href="https://gist.github.com/shawnbot/6518285">Zoom bounded</a></li>
+            <li><a href="http://callmenick.com/post/stylish-css-buttons">Stylish CSS Buttons</a></li>
+            <li><a href="https://bl.ocks.org/mbostock/4573883">Threshold Key</a></li>
         </ol>
     </ul>
 
