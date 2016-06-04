@@ -561,8 +561,13 @@ function mouseover(d) {
 }
 
 function mousemove(d) {
-    div.html("County Name: " + d.properties.county_name + "<br>Tract: " + d.properties.NAME + "<br>Total Population: " + d.properties.population + "<br> % of 18+ in College: " + d.properties.inColCent + "<br>% Insured: " + d.properties.percent_insured + "<br> % living in poverty: " + d.properties.percent_poverty).style("left", (d3.event.pageX - 220) + "px")
-            .style("top", (d3.event.pageY) + "px").style("height", "80px");
+        div.html("<p style=text-align:center> County Name: " + d.properties.county_name +
+"<p style=text-align:left> Tract: " + "<span style=float:right;>" + d.properties.NAME + "</span> </p>" +
+"<p style=text-align:left> Total Population: " + "<span style=float:right;>" + d.properties.population + "</span> </p>" + 
+"<p style=text-align:left> % of 18+ in College: " + "<span style=float:right;>" + d.properties.inColCent + "</span> </p>" +			
+"<p style=text-align:left> % Insured " + "<span style=float:right;>" + d.properties.percent_insured + "</span> </p>" +
+"<p style=text-align:left> % Living in Poverty: " + "<span style=float:right;>" + d.properties.percent_poverty + "</span> </p>").style("left", (d3.event.pageX - 220) + "px")
+            .style("top", (d3.event.pageY) + "px");
 }
 
 function mouseout(d) {
