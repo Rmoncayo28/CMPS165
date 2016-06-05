@@ -89,15 +89,105 @@ var map33Y = -30;
 //set datatype equal to the default value of the dropdown menu
 var dataType = "education";
 
- var deleteRow = function (row) {
-     var table = row.parentNode; 
-     table.removeChild(row); 
- }
 
 d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     if (error) throw error;
 
     var tracts = topojson.feature(ca, ca.objects.tracts);
+ var deleteRow = function (row) {
+     var table = row.parentNode; 
+     table.removeChild(row); 
+ }
+ 
+ var addListeners = function(newRow, currObj, dee, scale, colorVariable) {
+     var colorEval = "parseFloat(d.properties." + colorVariable + ", 10) || 0";
+     newRow.addEventListener("click", function() {
+         deleteRow(newRow);
+         colorTracts(dee.properties.GEOID, true);
+         selected[dee.properties.NAME] = undefined;
+     });
+     newRow.addEventListener("mouseover", function() {
+         newRow.style.background = "red";
+     });
+     newRow.addEventListener("mouseout", function() {
+         newRow.style.background = "";
+     });
+ };
+var colorTracts = function(geoid, reScale) {
+  tract1.selectAll(".tract")
+    .filter(function(d) { 
+        return d.properties.GEOID === geoid;})
+    .style("fill", function(d) {
+        if(reScale) {
+            return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
+        }  else return "orange";
+    });
+  tract2.selectAll(".tract-2")
+    .filter(function(d) { return d.properties.GEOID === geoid;})
+    .style("fill", function(d) {
+        if(reScale) {
+            return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
+        }  else return "orange";
+    });
+  tract3.selectAll(".tract-3")
+    .filter(function(d) { return d.properties.GEOID === geoid;})
+    .style("fill", function(d) {
+        if(reScale) {
+            return povertyScale(parseFloat(d.properties.percent_poverty, 10) || 0);
+        }  else return "orange";
+    });
+};
+var dimTracts =function(d, dim) {
+    geoid = d.properties.GEOID;
+  tract1.selectAll(".tract")
+    .filter(function(d) { 
+        return d.properties.GEOID === geoid;})
+    .style("opacity", function(d) {
+        if(dim) {
+            return "0.5";
+        }  else return "1";
+    });
+  tract2.selectAll(".tract-2")
+    .filter(function(d) { return d.properties.GEOID === geoid;})
+    .style("opacity", function(d) {
+        if(dim) {
+            return "0.5";
+        }  else return "1";
+    });
+  tract3.selectAll(".tract-3")
+    .filter(function(d) { return d.properties.GEOID === geoid;})
+    .style("opacity", function(d) {
+        if(dim) {
+            return "0.5";
+        }  else return "1";
+    });
+};
+var populateRow = function(currObj, d, scale, colorVariable) {
+    var x = document.getElementById("table1");
+                var newRow = document.createElement("TR");
+                newRow.setAttribute("id", "row" + d.properties.GEOID);
+
+                var newData = document.createElement("TD");
+                newData.innerHTML = d.properties.GEOID;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.county_name;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.population;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.inColCent;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.percent_insured;
+                newRow.appendChild(newData);
+                newData = document.createElement("TD");
+                newData.innerHTML = d.properties.percent_poverty;
+                newRow.appendChild(newData);
+                x.appendChild(newRow);
+                addListeners(newRow, currObj, d, scale, colorVariable);
+};
 
     //Tracts
 
@@ -117,58 +207,29 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("d", path)
         .on("mouseover", function (d) {
             mouseover(d);
+            dimTracts(d, true);
         })
         .on("mouseout", function (d) {
             mouseout(d);
+            dimTracts(d, false);
         })
         .on("mousemove", function (d) {
             mousemove(d);
         })
         .on("click", function (d) {
-            if (selected[d.properties.NAME] === undefined) {
-                selected[d.properties.NAME] = this;
-                d3.select(this).style("fill", "red");
-
-                var x = document.getElementById("table1");
-                var newRow = document.createElement("TR");
-                newRow.setAttribute("id", "row" + d.properties.NAME);
-
-                var newData = document.createElement("TD");
-                newData.innerHTML = d.properties.NAME;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.county_name;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.population;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.inColCent;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.percent_insured;
-                newRow.appendChild(newData);
-
-                x.appendChild(newRow);
-                var currObj = this
-                var dee = d;
-                newRow.addEventListener("click", function() {
-                    deleteRow(newRow);
-                    d3.select(currObj).style("fill", function (d) {
-                        return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
-                    });
-                    selected[dee.properties.NAME] = undefined;
-                });
+            if (selected[d.properties.GEOID] === undefined) {
+                selected[d.properties.GEOID] = this;
+                populateRow(this, d, educationScale, "inColCent");
+                colorTracts(d.properties.GEOID, false);
+                //addListeners(newRow, this, d, educationScale, "inColCent");
+                
             } else {
-                d3.select(this).style("fill", function (d) {
-                    return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
-                });
-                selected[d.properties.NAME] = undefined;
-                var removeme = document.getElementById("row" + d.properties.NAME);
+                colorTracts(d.properties.GEOID, true);
+                selected[d.properties.GEOID] = undefined;
+                var removeme = document.getElementById("row" + d.properties.GEOID);
                 removeme.parentElement.removeChild(removeme);
             }
         });
-
     tract1.append("path")
         .datum(topojson.mesh(ca, ca.objects.counties, function (a, b) {
             return a !== b;
@@ -232,55 +293,25 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("d", path)
         .on("mouseover", function (d) {
             mouseover(d);
+            dimTracts(d, true);
         })
         .on("mouseout", function (d) {
             mouseout(d);
+            dimTracts(d, false);
         })
         .on("mousemove", function (d) {
             mousemove(d);
         })
         .on("click", function (d) {
-            if (selected[d.properties.NAME] === undefined) {
-                selected[d.properties.NAME] = this;
-                d3.select(this).style("fill", "red");
-
-
-                var x = document.getElementById("table1");
-                var newRow = document.createElement("TR");
-                newRow.setAttribute("id", "row" + d.properties.NAME);
-
-                var newData = document.createElement("TD");
-                newData.innerHTML = d.properties.NAME;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.county_name;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.population;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.inColCent;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.percent_insured;
-                newRow.appendChild(newData);
-
-                x.appendChild(newRow);
-                var currObj = this
-                var dee = d;
-                 newRow.addEventListener("click", function() {
-                    deleteRow(newRow);
-                     d3.select(currObj).style("fill", function (d) {
-                        return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
-                    });
-                     selected[dee.properties.NAME] = undefined;
-                 });
+            if (selected[d.properties.GEOID] === undefined) {
+                selected[d.properties.GEOID] = this;
+                populateRow(this, d, healthScale, "percent_insured");
+                colorTracts(d.properties.GEOID, false);
+                //addListeners(newRow, this, d, healthScale, "percent_insured");
             } else {
-                d3.select(this).style("fill", function (d) {
-                    return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
-                });
-                selected[d.properties.NAME] = undefined;
-                var removeme = document.getElementById("row" + d.properties.NAME);
+                colorTracts(d.properties.GEOID, true);
+                selected[d.properties.GEOID] = undefined;
+                var removeme = document.getElementById("row" + d.properties.GEOID);
                 removeme.parentElement.removeChild(removeme);
             }
         });
@@ -347,60 +378,26 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("d", path)
         .on("mouseover", function (d) {
             mouseover(d);
+            dimTracts(d, true);
         })
         .on("mouseout", function (d) {
             mouseout(d);
+            dimTracts(d, false);
         })
         .on("mousemove", function (d) {
             mousemove(d);
         })
         .on("click", function (d) {
-            if (selected[d.properties.NAME] === undefined) {
-                selected[d.properties.NAME] = this;
-                d3.select(this).style("fill", "red");
-
-
-                var x = document.getElementById("table1");
-                var newRow = document.createElement("TR");
-                newRow.setAttribute("id", "row" + d.properties.NAME);
-
-                var newData = document.createElement("TD");
-                newData.innerHTML = d.properties.NAME;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.county_name;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.population;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.inColCent;
-                newRow.appendChild(newData);
-                newData = document.createElement("TD");
-                newData.innerHTML = d.properties.percent_insured;
-                newRow.appendChild(newData);
-
-
-                x.appendChild(newRow);
-                var currObj = this
-                var dee = d;
-                newRow.addEventListener("click", function() {
-                    deleteRow(newRow);
-                    d3.select(currObj).style("fill", function (d) {
-                        return povertyScale(parseFloat(d.properties.percent_poverty, 10) || 0);
-                    });
-                    selected[dee.properties.NAME] = undefined;
-                });
-                newRow.addEventListener("mouseover", function() {
-                    console.log("over");
-                });
+            if (selected[d.properties.GEOID] === undefined) {
+                selected[d.properties.GEOID] = this;
+                populateRow(this, d, povertyScale, "percent_poverty");
+                colorTracts(d.properties.GEOID, false);
+                //addListeners(newRow, this, d, povertyScale, "percent_poverty");
                      
             } else {
-                d3.select(this).style("fill", function (d) {
-                    return povertyScale(parseFloat(d.properties.percent_poverty, 10) || 0);
-                });
-                selected[d.properties.NAME] = undefined;
-                var removeme = document.getElementById("row" + d.properties.NAME);
+                colorTracts(d.properties.GEOID, true);
+                selected[d.properties.GEOID] = undefined;
+                var removeme = document.getElementById("row" + d.properties.GEOID);
                 removeme.parentElement.removeChild(removeme);
             }
         });
@@ -480,7 +477,6 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     var button_poverty = "false";
 
     $('#selector button').click(function () {
-
         if ($(event.target).attr('id') == "button_education") {
             button_edu = $(event.target).attr('value');
         } else if ($(event.target).attr('id') == "button_health") {
@@ -595,7 +591,7 @@ function mouseover(d) {
 
 function mousemove(d) {
         div.html("<p style=text-align:center> <strong> <font size=3>" + d.properties.county_name +
-"</strong> </font> <p style=text-align:left> Tract: " + "<span style=float:right;>" + d.properties.NAME + "</span> </p>" +
+"</strong> </font> <p style=text-align:left> GeoID: " + "<span style=float:right;>" + d.properties.GEOID + "</span> </p>" +
 "<p style=text-align:left> Total Population: " + "<span style=float:right;>" + d.properties.population + "</span> </p>" + 
 "<p style=text-align:left> % of 18+ in College: " + "<span style=float:right;>" + d.properties.inColCent + "</span> </p>" +			
 "<p style=text-align:left> % Insured " + "<span style=float:right;>" + d.properties.percent_insured + "</span> </p>" +
@@ -607,130 +603,6 @@ function mouseout(d) {
     div.style("display", "none");
 }
 
-function changeData(group, type) {
-    if(type.toLowerCase() === "health") {
-        group.transition()
-            .style("fill", function(d) {
-                if (selected[d.properties.NAME] === undefined) {
-                     return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
-                } else { return "red";}
-            });
-        group.on("click", function (d) {
-                if (selected[d.properties.NAME] === undefined) {
-                    selected[d.properties.NAME] = this;
-                    d3.select(this).style("fill", "red");
-                    var x = document.getElementById("table1");
-                    var newRow = document.createElement("TR");
-                    newRow.setAttribute("id" , "row" + d.properties.NAME);
-                    newRow.setAttribute("class", "rowContent");
-
-                    var newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.NAME;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.county_name;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.population;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.inColCent;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.percent_insured;
-                    newRow.appendChild(newData);
-                
-                
-                x.appendChild(newRow);
-                } else {
-                    d3.select(this).style("fill", function (d) {
-                        return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
-                    });
-                    selected[d.properties.NAME] = undefined;
-                    var removeme = document.getElementById("row" + d.properties.NAME);
-                    removeme.parentElement.removeChild(removeme);
-                }
-            })
-    } else if(type.toLowerCase() === "poverty") {
-        group.transition()
-            .style("fill", function(d) {
-            if (selected[d.properties.NAME] === undefined) {
-                     return povertyScale(parseFloat(d.properties.inColCent, 10) || 0);
-            } else { return "red";}
-            });
-         group.on("click", function (d) {
-                if (selected[d.properties.NAME] === undefined) {
-                    selected[d.properties.NAME] = this;
-                    d3.select(this).style("fill", "red");
-                    var x = document.getElementById("table1");
-                    var newRow = document.createElement("TR");
-                    newRow.setAttribute("id" , "row" + d.properties.NAME);
-                    var newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.NAME;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.county_name;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.population;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.inColCent;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.percent_insured;
-                    newRow.appendChild(newData);
-                } else {
-                    d3.select(this).style("fill", function (d) {
-                        return povertyScale(parseFloat(d.properties.inColCent, 10) || 0);
-                    });
-                    selected[d.properties.NAME] = undefined;
-                    var removeme = document.getElementById("row" + d.properties.NAME);
-                    removeme.parentElement.removeChild(removeme);
-                }
-            })
-        
-    } else if(type.toLowerCase() === "education") {
-         group.transition()
-            .style("fill", function(d) {
-             if (selected[d.properties.NAME] === undefined) {
-                     return educationScale(parseFloat(d.properties.inColCent, 10) || 0); 
-             } else {return "red";}
-            });
-         group.on("click", function (d) {
-                if (selected[d.properties.NAME] === undefined) {
-                    selected[d.properties.NAME] = this;
-                    d3.select(this).style("fill", "red");
-                    var x = document.getElementById("table1");
-                    var newRow = document.createElement("TR");
-                    newRow.setAttribute("id" , "row" + d.properties.NAME);
-
-                    var newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.NAME;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.county_name;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.population;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.inColCent;
-                    newRow.appendChild(newData);
-                    newData = document.createElement("TD");
-                    newData.innerHTML = d.properties.percent_insured;
-                    newRow.appendChild(newData);
-                } else {
-                    d3.select(this).style("fill", function (d) {
-                        return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
-                    });
-                    selected[d.properties.NAME] = undefined;
-                    var removeme = document.getElementById("row" + d.properties.NAME);
-                    removeme.parentElement.removeChild(removeme);
-                }
-            })
-    }
-}
 
 function zoomed() {
     if(d3.event.translate[0] == 0 && d3.event.translate[0] == 0) {
