@@ -36,7 +36,7 @@
           background: #0C374D;
           color: #fff;
           pointer-events: none;
-          opacity: 0.7;
+          opacity: 0.8;
         }
 
         table, th, td {
@@ -56,8 +56,8 @@ button {
   display: inline-block;
   margin: 0 10px 0 0;
   padding: 15px 45px;
-  font-size: 48px;
-  font-family: "Bitter",serif;
+  font-size: 20px;
+  font-family: sans-serif;
   line-height: 1.8;
   appearance: none;
   box-shadow: none;
@@ -70,22 +70,22 @@ button:focus {
 
 section.gradient button {
   color: #fff;
-  text-shadow: -2px 2px #346392;
-  background-color: #ff9664;
+  text-shadow: -2px 2px #000000;
+  background-color: #0C374D;
   background-image: linear-gradient(top, #6496c8, #346392);
-  box-shadow: inset 0 0 0 1px #27496d;
+  box-shadow: inset 0 0 0 1px #000000;
   border: none;
   border-radius: 15px;
 }
 
 section.gradient button:hover,
 section.gradient button.hover {
-  box-shadow: inset 0 0 0 1px #27496d,0 5px 15px #193047;
+  box-shadow: inset 0 0 0 1px #807d80,0 5px 15px #807d80;
 }
 
 section.gradient button:active,
 section.gradient button.active {
-  box-shadow: inset 0 0 0 1px #27496d,inset 0 5px 30px #193047;
+  box-shadow: inset 0 0 0 1px #000000,inset 0 5px 30px #8a8a8a;
 }
 .county-border {
   fill: none;
