@@ -591,7 +591,7 @@ function mouseover(d) {
 
 function mousemove(d) {
         div.html("<p style=text-align:center> <strong> <font size=3>" + d.properties.county_name +
-"</strong> </font> <p style=text-align:left> GeoID: " + "<span style=float:right;>" + d.properties.GEOID + "</span> </p>" +
+"</strong> </font> <hr> <p style=text-align:left> GeoID: " + "<span style=float:right;>" + d.properties.GEOID + "</span> </p>" +
 "<p style=text-align:left> Total Population: " + "<span style=float:right;>" + d.properties.population + "</span> </p>" + 
 "<p style=text-align:left> % of 18+ in College: " + "<span style=float:right;>" + d.properties.inColCent + "</span> </p>" +			
 "<p style=text-align:left> % Insured " + "<span style=float:right;>" + d.properties.percent_insured + "</span> </p>" +
