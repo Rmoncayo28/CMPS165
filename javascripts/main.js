@@ -1,90 +1,97 @@
-var width = 1900
-    , height = 1000;
+var width = $(window).width()-45
+    , height = 525;
 
 var projection = d3.geo.mercator()
-    .scale(width * 2)
-    .center([-120, 36])
-    .translate([280, height / 2 + 50]);
+    .scale(2050)
+    .center([-105, 37])
+    .translate([ width/2 , height / 2]);
 
 var zoom = d3.behavior.zoom()
     .scaleExtent([1, 200])
     .on("zoom", zoomed);
 
 var path = d3.geo.path().projection(projection);
-var border = 1;
-var borderColor = "black";
+
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("border", border)
     .append("g");
 
 svg.call(zoom);
 
 var g = svg.append("g");
-//var borderPath = svg.append("rect")
-//    .attr("x", 0)
-//    .attr("y", 0)
-//    .attr("height", height)
-//    .attr("width", width)
-//    .style("stroke", borderColor)
-//    .style("fill", "none")
-//    .style("stroke-width", border)
+
+var blueColors = colorbrewer.Blues[5];
+    blueColors.unshift("#ffffff");
 
 //10.68 is the mean of the set of % of population in college
 var educationScale = d3.scale.threshold()
-    .domain([2.67, 5.34, 10.68, 44.66, 100])
-    .range(colorbrewer.Blues[5]);
+    .domain([0,2.67, 5.34, 10.68, 44.66, 100.1])
+    .range(blueColors);
+
+var greenColors = colorbrewer.Greens[5];
+    greenColors.unshift("#ffffff");
 
 //mean value for percent_insured = 666172.3999999982/8046 = 82.7954760129
 var healthScale = d3.scale.threshold()
-    .domain([20.69875, 41.3975, 82.795, 91.398, 100])
-    .range(colorbrewer.Greens[5]);
+    .domain([0,20.69875, 41.3975, 82.795, 91.398, 100.1])
+    .range(greenColors);
+
+var purpleColors = colorbrewer.Purples[5];
+    purpleColors.unshift("#ffffff");
+    purpleColors.push("#696969");
 
 var povertyScale = d3.scale.threshold()
-    .domain([4.15, 8.3, 16.6, 33.2, 66.4])
-    .range(colorbrewer.Purples[5]);
+    .domain([0,4.15, 8.3, 16.6, 33.2, 66.4,100.1])
+    .range(purpleColors);
 
 var formatPercent = d3.format(".0%");
 
 var keyScale = d3.scale.linear()
     .domain([0, 1])
-    .range([0, 5]);
+    .range([0, 3]);
+
+var tickDistance = educationScale.domain();
 
 var keyAxis = d3.svg.axis()
     .scale(keyScale)
     .orient("bottom")
-    .tickSize(20)
+    .tickSize(17)
     .tickFormat(function (d) {
-        return Math.ceil(d) >= 45 ? Math.ceil(d) + "%" : Math.ceil(d);
+        var currIndex = tickDistance.indexOf(d);
+        var nextIndex = currIndex+1;
+        if ( d === 100.1 || nextIndex !== 0 && (tickDistance[nextIndex] - tickDistance[currIndex]) > 10 ) {
+            return '\u00A0'+'\u00A0'+'\u00A0'+Math.round(d) + "%";
+        }
+        return Math.round(d);
     });
 
 var selected = {};
 
 //x,y position for when there is one map displaying
-var mapX = screen.width / 3;
-var mapY = -30;
+var mapX = width/2-200;
+var mapY = 0;
 
 //x,y position for when there are two maps
-var map21X = 100;
-var map21Y = -30;
+var map21X = width/2-550;
+var map21Y = 0;
 
-var map22X = 800;
-var map22Y = -30;
+var map22X = width/2+100;
+var map22Y = 0;
 
 //x,y position for when there are three maps
 
 //first map
-var map31X = 10;
-var map31Y = -30;
+var map31X = 100;
+var map31Y = 0;
 
 //second map
-var map32X = 610;
-var map32Y = -30;
+var map32X = width/2-200;
+var map32Y = 0;
 
 //third map
-var map33X = 1220;
-var map33Y = -30;
+var map33X = width-500;
+var map33Y = 0;
 
 //set datatype equal to the default value of the dropdown menu
 var dataType = "education";
@@ -97,7 +104,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
  var deleteRow = function (row) {
      var table = row.parentNode; 
      table.removeChild(row); 
- }
+ };
  
  var addListeners = function(newRow, currObj, dee, scale, colorVariable) {
      var colorEval = "parseFloat(d.properties." + colorVariable + ", 10) || 0";
@@ -241,7 +248,7 @@ var populateRow = function(currObj, d, scale, colorVariable) {
 
     //Tract 1 Legend x,y relative to tract1
     var legend1x = 80;
-    var legend1y = 850;
+    var legend1y = height-50;
 
     //Set Tract tick values
     keyAxis
@@ -254,8 +261,8 @@ var populateRow = function(currObj, d, scale, colorVariable) {
     var legend1rects = legend1.selectAll("legend1-rect")
         .data(educationScale.range().map(function (color) {
             var d = educationScale.invertExtent(color);
-            if (d[0] == null) d[0] = keyScale.domain()[0];
-            if (d[1] == null) d[1] = keyScale.domain()[1];
+            if (d[0] === null) d[0] = keyScale.domain()[0];
+            if (d[1] === null) d[1] = keyScale.domain()[1];
             return d;
         })).enter().append("rect")
         .attr("class", "legend1-rect")
@@ -275,6 +282,7 @@ var populateRow = function(currObj, d, scale, colorVariable) {
         .attr("x", 5)
         .attr("y", -10)
         .attr("dy", ".35em")
+        .style("font-size","12px")
         .text("percentage of population age 18 and over enrolled in college");
 
     //Tract 2
@@ -327,11 +335,12 @@ var populateRow = function(currObj, d, scale, colorVariable) {
 
     //Tract 2 Legend x,y relative to tract2
     var legend2x = 80;
-    var legend2y = 850;
+    var legend2y = height-50;
 
     //Set Tract tick values
     keyAxis.tickValues(healthScale.domain());
-
+    tickDistance = healthScale.domain();
+    
     var legend2 = tract2.append("g")
         .attr("class", "key")
         .attr("transform", "translate(" + legend2x + "," + legend2y + ")");
@@ -339,8 +348,8 @@ var populateRow = function(currObj, d, scale, colorVariable) {
     var legend2rects = legend2.selectAll("legend2-rect")
         .data(healthScale.range().map(function (color) {
             var d = healthScale.invertExtent(color);
-            if (d[0] == null) d[0] = keyScale.domain()[0];
-            if (d[1] == null) d[1] = keyScale.domain()[1];
+            if (d[0] === null) d[0] = keyScale.domain()[0];
+            if (d[1] === null) d[1] = keyScale.domain()[1];
             return d;
         })).enter().append("rect")
         .attr("class", "legend2-rect")
@@ -360,7 +369,8 @@ var populateRow = function(currObj, d, scale, colorVariable) {
         .attr("x", 5)
         .attr("y", -10)
         .attr("dy", ".35em")
-        .text("percentage of population acquired health insurance");
+        .style("font-size","13px")
+        .text("percentage of population with health insurance");
 
     //Tract 3
     var tract3 = g.append("g")
@@ -413,11 +423,12 @@ var populateRow = function(currObj, d, scale, colorVariable) {
 
     //Tract 3 Legend x,y relative to tract3
     var legend3x = 80;
-    var legend3y = 850;
+    var legend3y = height-50;
 
     //Set Tract tick values
     keyAxis.tickValues(povertyScale.domain());
-
+    tickDistance = povertyScale.domain();
+    
     var legend3 = tract3.append("g")
         .attr("class", "key")
         .attr("transform", "translate(" + legend3x + "," + legend3y + ")");
@@ -425,8 +436,8 @@ var populateRow = function(currObj, d, scale, colorVariable) {
     var legend3rects = legend3.selectAll("legend3-rect")
         .data(povertyScale.range().map(function (color) {
             var d = povertyScale.invertExtent(color);
-            if (d[0] == null) d[0] = keyScale.domain()[0];
-            if (d[1] == null) d[1] = keyScale.domain()[1];
+            if (d[0] === null) d[0] = keyScale.domain()[0];
+            if (d[1] === null) d[1] = keyScale.domain()[1];
             return d;
         })).enter().append("rect")
         .attr("class", "legend3-rect")
@@ -446,6 +457,7 @@ var populateRow = function(currObj, d, scale, colorVariable) {
         .attr("x", 5)
         .attr("y", -10)
         .attr("dy", ".35em")
+        .style("font-size","14px")
         .text("percentage of population below poverty level");
 
     //Checkboxes
@@ -605,7 +617,7 @@ function mouseout(d) {
 
 
 function zoomed() {
-    if(d3.event.translate[0] == 0 && d3.event.translate[0] == 0) {
+    if(d3.event.translate[0] === 0 && d3.event.translate[0] === 0) {
         window.scrollBy(0,80);
     }
     
