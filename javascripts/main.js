@@ -129,7 +129,7 @@ var map33Y = 0;
 //set datatype equal to the default value of the dropdown menu
 var dataType = "education";
 
-
+var numbers = false;
 d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     if (error) throw error;
 
@@ -161,7 +161,9 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
             })
             .style("fill", function (d) {
                 if (reScale) {
-                    return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
+                    if(numbers) {
+                        return educationScaleNum(parseFloat(d.properties.numInCol, 10) || 0);
+                    } else return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
                 } else return "orange";
             });
         tract2.selectAll(".tract-2")
@@ -170,7 +172,9 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
             })
             .style("fill", function (d) {
                 if (reScale) {
-                    return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
+                    if(numbers) {
+                        return healthScaleNum(parseFloat(d.properties.total_insured, 10) || 0);
+                    } else return healthScale(parseFloat(d.properties.percent_insured, 10) || 0);
                 } else return "orange";
             });
         tract3.selectAll(".tract-3")
@@ -179,7 +183,9 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
             })
             .style("fill", function (d) {
                 if (reScale) {
-                    return povertyScale(parseFloat(d.properties.percent_poverty, 10) || 0);
+                    if(numbers) {
+                        return povertyScaleNum(parseFloat(d.properties.total_poverty, 10) || 0);
+                    } else return povertyScale(parseFloat(d.properties.percent_poverty, 10) || 0);
                 } else return "orange";
             });
     };
@@ -792,6 +798,8 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
 
     //Toggle Switch between number and percentage
     $('#switcher').click(function () {
+        console.log("switch");
+        numbers = !numbers;
         if ($('#filt-css').attr('class') === "toggler") {
             //Number
             tract1paths.transition().duration(450)
