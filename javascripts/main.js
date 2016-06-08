@@ -878,16 +878,16 @@ function mousemove(d) {
             "<p style=text-align:left> Total Population: " + "<span style=float:right;>" + d.properties.population + "</span> </p>" +
             "<p style=text-align:left> 18+ in College: " + "<span style=float:right;>" + d.properties.numInCol + "</span> </p>" +
             "<p style=text-align:left> Insured " + "<span style=float:right;>" + d.properties.total_insured + "</span> </p>" +
-            "<p style=text-align:left> Living in Poverty: " + "<span style=float:right;>" + d.properties.total_poverty + "</span> </p>").style("left", (d3.event.pageX - 220) + "px")
-        .style("top", (d3.event.pageY) + "px");
+            "<p style=text-align:left> Living in Poverty: " + "<span style=float:right;>" + d.properties.total_poverty + "</span> </p>").style("left", (d3.event.pageX - 290) + "px")
+        .style("top", (d3.event.pageY) + 20 + "px");
     } else {
     div.html("<p style=text-align:center> <strong> <font size=3>" + d.properties.county_name +
             " Tract </strong> </font> <p style=text-align:left> GeoID: " + "<span style=float:right;>" + d.properties.GEOID + "</span> </p>" +
             "<p style=text-align:left> Total Population: " + "<span style=float:right;>" + d.properties.population + "</span> </p>" +
             "<p style=text-align:left> % of 18+ in College: " + "<span style=float:right;>" + d.properties.inColCent + "</span> </p>" +
             "<p style=text-align:left> % Insured " + "<span style=float:right;>" + d.properties.percent_insured + "</span> </p>" +
-            "<p style=text-align:left> % Living in Poverty: " + "<span style=float:right;>" + d.properties.percent_poverty + "</span> </p>").style("left", (d3.event.pageX - 220) + "px")
-        .style("top", (d3.event.pageY) + "px");
+            "<p style=text-align:left> % Living in Poverty: " + "<span style=float:right;>" + d.properties.percent_poverty + "</span> </p>").style("left", (d3.event.pageX - 290) + "px")
+        .style("top", (d3.event.pageY) + 20 + "px");
     }
 }
 
