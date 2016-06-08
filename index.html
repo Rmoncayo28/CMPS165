@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="stylesheets/caliStyle.css">
     <link rel="stylesheet" href="stylesheets/spinner.css">
+    <link rel="stylesheet" href="stylesheets/toggleSwitch.css">
     <!-- load jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <!--buttonPresses Scripts!  -->
@@ -32,6 +33,18 @@
 
     <!--insert map script here..-->
     <script src="javascripts/main.min.js"></script>
+    
+    <div align="center" style="margin-bottom:10px;">
+        <label class="toggler toggler--is-active" id="filt-css">Percentage</label>
+        <div class="toggle">
+            <input type="checkbox" id="switcher" class="check">
+            <b class="b switch"></b>
+        </div>
+        <label class="toggler" id="filt-javascript">Number</label>
+    </div>
+    
+    <!--toggleSwitch Scripts!  -->
+    <script src="javascripts/toggleSwitch.js"></script>
 
     <center>
         <div id="selector">
@@ -116,6 +129,7 @@
             <li><a href="https://gist.github.com/shawnbot/6518285">Zoom bounded</a></li>
             <li><a href="http://callmenick.com/post/stylish-css-buttons">Stylish CSS Buttons</a></li>
             <li><a href="https://bl.ocks.org/mbostock/4573883">Threshold Key</a></li>
+            <li><a href="http://www.cssscript.com/ios-7-style-animated-switch-control-with-javascript-and-css3/">iOS 7 Style Toggle Switch</a></li>
         </ol>
     </ul>
 
