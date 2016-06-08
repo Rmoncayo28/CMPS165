@@ -798,7 +798,14 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
 
     //Toggle Switch between number and percentage
     $('#switcher').click(function () {
-        console.log("switch");
+        for(key in selected) {
+            if(selected[key] != undefined) {
+                selected[key] = undefined;
+                var removeme = document.getElementById("row" + key);
+                if(removeme === null) continue;
+                removeme.parentElement.removeChild(removeme);
+            }
+        }
         numbers = !numbers;
         if ($('#filt-css').attr('class') === "toggler") {
             //Number
