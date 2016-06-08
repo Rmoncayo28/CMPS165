@@ -1,5 +1,5 @@
 var width = $(window).width() - 45
-    , height = 500;
+    , height = 490;
 
 var projection = d3.geo.mercator()
     .scale(2050)
