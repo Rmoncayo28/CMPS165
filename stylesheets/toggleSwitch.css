@@ -3,6 +3,7 @@
   display: inline-block;
   vertical-align: middle;
   margin: 10px;
+  z-index: -1;
 }
 
 .toggler {
