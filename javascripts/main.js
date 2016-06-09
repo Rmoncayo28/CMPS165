@@ -86,7 +86,12 @@ var keyAxis = d3.svg.axis()
         }
         return Math.round(d);
     });
-
+jQuery.fn.d3Click = function () {
+  this.each(function (i, e) {
+    var evt = new MouseEvent("click");
+    e.dispatchEvent(evt);
+  });
+};
 var keyAxisNum = d3.svg.axis()
     .scale(keyScaleNum)
     .orient("bottom")
@@ -128,11 +133,59 @@ var map33Y = 0;
 
 //set datatype equal to the default value of the dropdown menu
 var dataType = "education";
-
 var numbers = false;
 d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     if (error) throw error;
+$('.my-form').on('submit', function () {
+        document.getElementById("errorText").innerHTML = "";
+    var data = null;
+    var x = document.getElementById("form");
+    var street = "";
+    street = x.elements[1].value;
+    var city = "";
+    city = x.elements[2].value;
+    var zip = "";
+    zip = x.elements[3].value;
+    var state = "ca";
+    console.log(street, city, zip);
+    if(street != undefined ) street = street.replace(/ /g,"+");
+    var uri = "https://geocoding.geo.census.gov/geocoder/geographies/address?street=" + street +"&city=" + city + "&state=ca&zip=" + zip + "&benchmark=8&vintage=8&layers=8&format=jsonp";
+    console.log(jsoncrap(uri, street, state, zip, city));
+    console.log();
+    document.getElementById("form").reset();
+    return false;
+    return false;
+});
 
+function jsoncrap(uri, street, state, zip, city) {
+     jQuery(function($) {
+        $.ajax({
+            url: uri,
+            dataType: 'jsonp',
+            success: function(response) {
+                var geoid = response.result.addressMatches[0].geographies["Census Tracts"][0].GEOID;
+                console.log(response.result.addressMatches[0].geographies["Census Tracts"][0].GEOID);
+                if (selected[parseInt(geoid)] === undefined) {
+                    console.log(d3.select("#P"+parseInt(geoid)).datum().properties.GEOID);
+                    //addListeners(newRow, this, d, educationScale, "inColCent");
+                    selected[d3.select("#P"+parseInt(geoid)).datum().properties.GEOID] = d3.select("#P"+parseInt(geoid));
+                    populateRow(d3.select("#P"+parseInt(geoid)), d3.select("#P"+parseInt(geoid)).datum(), educationScale, "inColCent");
+                    colorTracts(d3.select("#P"+parseInt(geoid)).datum().properties.GEOID, false);
+                    //addListeners(newRow, this, d, educationScale, "inColCent");
+
+                }
+
+            },
+            error: function(error) {
+                document.getElementById("errorText").innerHTML = "invalid address";
+                console.log("error");
+                console.log(error);
+                return false;
+            }
+        });
+    });
+    return true;
+}
     var tracts = topojson.feature(ca, ca.objects.tracts);
 
     var deleteRow = function (row) {
@@ -258,6 +311,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .enter().append("g").attr("class", "tract1")
         .append("path")
         .attr("class", "tract")
+        .attr("id", function(d) {return "P" + parseInt(d.properties.GEOID);})
         .style("fill", function (d) {
             return educationScale(parseFloat(d.properties.inColCent, 10) || 0);
         })
@@ -274,6 +328,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
             mousemove(d);
         })
         .on("click", function (d) {
+            console.log(this.id);
             if (selected[d.properties.GEOID] === undefined) {
                 selected[d.properties.GEOID] = this;
                 populateRow(this, d, educationScale, "inColCent");

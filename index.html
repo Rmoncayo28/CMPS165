@@ -61,7 +61,18 @@
     <br>
     <br>
 
-
+        <div>
+                <form id="form" class="my-form">
+                    <fieldset>
+                    <legend>Address Tract Lookup:</legend>
+                    Street: <br><input type="text" name="street"><br>
+                    City: <br><input type="text" name="city"><br>
+                    Zip<em>(optional)</em>: <br><input type="text" name="zip"><br>
+                        <div><span id="errorText" style="color:red"></span></div>
+                    <input type="submit" value="Submit">
+                    </fieldset>
+                </form>
+        </div>
     <table style="width:100%" id="table1">
         <caption>Census tract comparison</caption>
         <tr>
