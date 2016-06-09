@@ -3,8 +3,8 @@ var width = $(window).width() - 45
 
 var projection = d3.geo.mercator()
     .scale(2050)
-    .center([-105, 37])
-    .translate([width / 2, height / 2]);
+    .center([-121, 36.7783])
+    .translate([0, height / 2]);
 
 var zoom = d3.behavior.zoom()
     .scaleExtent([1, 200])
@@ -102,28 +102,28 @@ var keyAxisNum = d3.svg.axis()
 var selected = {};
 
 //x,y position for when there is one map displaying
-var mapX = width / 2 - 200;
+var mapX = width / 2;
 var mapY = 0;
 
 //x,y position for when there are two maps
-var map21X = width / 2 - 550;
+var map21X = width / 4;
 var map21Y = 0;
 
-var map22X = width / 2 + 100;
+var map22X = 3* width / 4;
 var map22Y = 0;
 
 //x,y position for when there are three maps
 
 //first map
-var map31X = 100;
+var map31X = width*0.2;
 var map31Y = 0;
 
 //second map
-var map32X = width / 2 - 200;
+var map32X = width/2;
 var map32Y = 0;
 
 //third map
-var map33X = width - 500;
+var map33X = width*0.8;
 var map33Y = 0;
 
 //set datatype equal to the default value of the dropdown menu
@@ -297,7 +297,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     //Tract 1 Legend - Percentage
 
     //Tract 1 Legend x,y relative to tract1
-    var legend1x = 80;
+    var legend1x = -90;
     var legend1y = height - 35;
 
     //Set Tract tick values
@@ -430,7 +430,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     //Tract 2 Legend - Percentage
 
     //Tract 2 Legend x,y relative to tract2
-    var legend2x = 80;
+    var legend2x = -90;
     var legend2y = height - 35;
 
     //Set Tract tick values
@@ -569,7 +569,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
     //Tract 3 Legend - Percentage
 
     //Tract 3 Legend x,y relative to tract3
-    var legend3x = 80;
+    var legend3x = -90;
     var legend3y = height - 35;
 
     //Set Tract tick values
