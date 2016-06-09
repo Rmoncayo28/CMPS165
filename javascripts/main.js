@@ -337,7 +337,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("y", -10)
         .attr("dy", ".35em")
         .style("font-size", "12px")
-        .text("percentage of population age 18 and over enrolled in college");
+        .text("Percentage of population age 18 and over enrolled in college");
 
     //Tract 1 Legend - Number
 
@@ -379,7 +379,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("y", -10)
         .attr("dy", ".35em")
         .style("font-size", "13px")
-        .text("Number of population age 18 and over enrolled in college");
+        .text("The total number of people age 18 and over enrolled in college");
 
     //Tract 2
     var tract2 = g.append("g")
@@ -470,7 +470,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("y", -10)
         .attr("dy", ".35em")
         .style("font-size", "14px")
-        .text("percentage of population with health insurance");
+        .text("Percentage of population with health insurance");
 
     //Tract 2 Legend - Number
 
@@ -517,7 +517,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("y", -10)
         .attr("dy", ".35em")
         .style("font-size", "14px")
-        .text("Number of population with health insurance");
+        .text("The total number of people with health insurance");
 
     //Tract 3
     var tract3 = g.append("g")
@@ -609,7 +609,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("y", -10)
         .attr("dy", ".35em")
         .style("font-size", "14px")
-        .text("percentage of population below poverty level");
+        .text("Percentage of population below poverty level");
 
     //Tract 3 Legend - Number
 
@@ -663,7 +663,7 @@ d3.json("dataSets/caEduHealthPovertyBound.json", function (error, ca) {
         .attr("y", -10)
         .attr("dy", ".35em")
         .style("font-size", "14px")
-        .text("Number of population below poverty level");
+        .text("The total number of people below poverty level");
 
     //Checkboxes
     d3.selectAll(".overlay_button").on("change", function () {
