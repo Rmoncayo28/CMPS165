@@ -33,8 +33,8 @@
     padding: 8px;
     margin-top: -20px;
     font: 12px sans-serif;
-    background: #0C374D;
-    color: #fff;
+    background-color:#deebf7;
+    color: #00000;
     pointer-events: none;
     opacity: 0.8;
     z-index: 10;
