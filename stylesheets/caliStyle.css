@@ -1,51 +1,54 @@
-        .tract {
-            fill: #ffd;
-            stroke: #000;
-            opacity: 1;
-            stroke-width: 0.05px;
-            stroke-opacity: 0.4;
+.tract {
+    fill: #ffd;
+    stroke: #000;
+    opacity: 1;
+    stroke-width: 0.05px;
+    stroke-opacity: 0.4;
+}
 
-        }
-        .tract:hover {
-            fill:green;
-            fill-opacity: 0.5;
-            stroke-width: 0.19px;
-        }
-        
-        .caption {
-            font-weight: bold;
-        }
-        
-        .key path {
-            display: none;
-        }
-        
-        .key line {
-            stroke: #000;
-            shape-rendering: crispEdges;
-        }
+.tract:hover {
+    fill: green;
+    fill-opacity: 0.5;
+    stroke-width: 0.19px;
+}
 
-        .tooltip {
-          position: absolute;
-          text-align: left;
-          width: 230px;
-          height: 160px;
-          padding: 8px;
-          margin-top: -20px;
-          font: 12px sans-serif;
-          background: #0C374D;
-          color: #fff;
-          pointer-events: none;
-          opacity: 0.8;
-          z-index: 10;
-        }
+.caption {
+    font-weight: bold;
+}
 
-        table, th, td {
+.key path {
+    display: none;
+}
+
+.key line {
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: left;
+    width: 230px;
+    height: 160px;
+    padding: 8px;
+    margin-top: -20px;
+    font: 12px sans-serif;
+    background: #0C374D;
+    color: #fff;
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 10;
+}
+
+table,
+th,
+td {
     border: 1px solid black;
     border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
     padding: 5px;
 }
 
@@ -54,42 +57,42 @@ th {
 }
 
 button {
-  display: inline-block;
-  margin: 0 10px 0 0;
-  padding: 10px 25px;
-  font-size: 16px;
-  font-family: sans-serif;
-  line-height: 1.8;
-  appearance: none;
-  box-shadow: none;
-  border-radius: 0;
+    display: inline-block;
+    margin: 0 10px 0 0;
+    padding: 10px 25px;
+    font-size: 16px;
+    font-family: sans-serif;
+    line-height: 1.8;
+    appearance: none;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 button:focus {
-  outline: none
+    outline: none
 }
 
 section.gradient button {
-  color: #fff;
-  text-shadow: -2px 2px #000000;
-  background-color: #0C374D;
-  background-image: linear-gradient(top, #6496c8, #346392);
-  box-shadow: inset 0 0 0 1px #000000;
-  border: none;
-  border-radius: 15px;
+    color: #fff;
+    text-shadow: -2px 2px #346392;
+    background-image: linear-gradient(top, #6496c8, #346392);
+    box-shadow: inset 0 0 0 1px #27496d;
+    border: none;
+    border-radius: 15px;
 }
 
 section.gradient button:hover,
 section.gradient button.hover {
-  box-shadow: inset 0 0 0 1px #807d80,0 5px 15px #807d80;
+    box-shadow: inset 0 0 0 1px #27496d, 0 5px 15px #193047;
 }
 
 section.gradient button:active,
 section.gradient button.active {
-  box-shadow: inset 0 0 0 1px #000000,inset 0 5px 30px #8a8a8a;
+    box-shadow: inset 0 0 0 1px #27496d, inset 0 5px 30px #193047;
 }
+
 .county-border {
-  fill: none;
-  stroke: #000;
-  stroke-opacity: .3;
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .3;
 }
