@@ -150,8 +150,7 @@ $('.my-form').on('submit', function () {
     console.log(street, city, zip);
     if(street != undefined ) street = street.replace(/ /g,"+");
     var uri = "https://geocoding.geo.census.gov/geocoder/geographies/address?street=" + street +"&city=" + city + "&state=ca&zip=" + zip + "&benchmark=8&vintage=8&layers=8&format=jsonp";
-    //jsoncrap(uri, street, state, zip, city);
-    console.log();
+    jsoncrap(uri, street, state, zip, city);
     document.getElementById("form").reset();
     return false;
 });
