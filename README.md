@@ -7,7 +7,7 @@ Live Demo!
 http://rmoncayo28.github.io/CaliforniaQualityofLife/
 
 Link to the datasets:
-https://github.com/Rmoncayo28/CaliforniaQualityofLife/tree/master/Data%20Sets
+https://github.com/Rmoncayo28/CaliforniaQualityofLife/tree/master/dataSets
 
 Members:
 
