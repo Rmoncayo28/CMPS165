@@ -4,10 +4,10 @@ Repository for the California Quality of Life project for the CMPS 165
 Data Visualization class.
 
 Live Demo!
-http://rmoncayo28.github.io/CMPS165/
+http://rmoncayo28.github.io/CaliforniaQualityofLife/
 
 Link to the datasets:
-https://github.com/Rmoncayo28/CMPS165/tree/master/Data%20Sets
+https://github.com/Rmoncayo28/CaliforniaQualityofLife/tree/master/Data%20Sets
 
 Members:
 
